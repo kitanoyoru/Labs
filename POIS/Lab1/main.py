@@ -2,8 +2,9 @@ from argparse import ArgumentParser, Namespace, ArgumentError
 
 from gevent.pywsgi import WSGIServer
 
-from app import create_app
+from app import App 
 
+# TODO: nove it to .env
 PROJECT_NAME = "lab1"
 HOST = "localhost"
 PORT = 8080
@@ -18,7 +19,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    app = create_app(args.plants)
+    app = App.create_app(args.plants)
 
     http_server = WSGIServer((HOST, PORT), app)
     http_server.serve_forever()

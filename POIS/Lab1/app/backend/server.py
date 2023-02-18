@@ -7,9 +7,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from app.simulation.simulation import Simulation
 
-from .resources.control import ControlSimulation
-
-
+from .api.control import ControlSimulation
 
 
 def init_backend(simulation: Simulation) -> Flask:
@@ -19,8 +17,6 @@ def init_backend(simulation: Simulation) -> Flask:
 
     api = Api(app)
 
-    controlSimulation = ControlSimulation
-
-    api.add_resource(, "/control")
+    api.add_resource(ControlSimulation, "/control")
 
     return app

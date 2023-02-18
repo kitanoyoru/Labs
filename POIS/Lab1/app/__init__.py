@@ -6,15 +6,22 @@
 # del check_versions
 
 # from ._settings import settings
-from .backend.server import init_backend
-from .simulation import init_simulation
 
 from flask import Flask
 
+from .backend.server import init_backend
+from .simulation import init_simulation
 
-def create_app(n_plants) -> Flask:
-    _simulation = init_simulation(n_plants)
-    _backend = init_backend(_simulation)
+
+class App:
+    simulation: Optional[Simulation] = None
+
+    @classmethod
+    def create_app(cls, n_plants: int) -> Flask:
+        cls.simulation = init_simulation(n_plants)
+        backend = init_backend()
+
+        return backend
 
 
 

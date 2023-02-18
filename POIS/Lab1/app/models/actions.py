@@ -1,34 +1,21 @@
 import jsonpickle
 
 from abc import ABC, abstractmethod
+from enum import Enum
 
 
-class Plant:
-    ...
+class ActionType(Enum):
+    DROUGHT = 1
 
-
-
-
-
-
-
-
-
-
-
-
-
-class Disease:
-    ...
-
-
-class Watering:
-    ...
+class Action(ABC):
+    @abstractmethod
+    def get_type(self) -> ActionType:
+        pass
 
 
 class Drought:
-    ...
+    def __init__(self) -> None:
+        self._type = ActionType.DROUGHT
 
-
-class Weeding:
-    ...
+    def get_type(self) -> ActionType:
+        return self._type

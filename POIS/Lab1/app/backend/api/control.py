@@ -2,14 +2,14 @@ from flask_restful import Resource, reqparse
 
 from typing import Tuple
 
-from app.simulation.simulation import Simulation
+from app import App
+from app.models.actions import ActionType
+
 
 class ControlSimulation(Resource):
-    simulation: Simulation = None
-
     parser = reqparse.RequestParser()
 
-    parser.add_argument("action", type=str, required=True)
+    parser.add_argument("action", type=int, required=True)
 
     def get(self) -> str:
         info: str = ControlSimulation.simulation.get_info()
@@ -21,10 +21,11 @@ class ControlSimulation(Resource):
         action = data["action"]
 
         try:
-            if ControlSimulation.simulation is None:
+            if App.simulation is None:
                 raise Exception()
 
-            ControlSimulation.simulation.call_action(action)
+            action_type: ActionType = ActionType(action)
+            ControlSimulation.simulation.call_action(action_type)
         except Exception as exc:
             return {"message": f"failed: {exc}"}, 500
 
