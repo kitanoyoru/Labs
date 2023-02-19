@@ -1,8 +1,7 @@
-import jsonpickle
-
 from abc import ABC, abstractmethod
 
-from typing import List
+from enum import Enum 
+from typing import List, Dict
 
 from .actions import Action, ActionType
 from .seed import Seed
@@ -16,13 +15,19 @@ class Place(ABC):
         pass
 
     @abstractmethod
-    def toJson(self) -> str:
+    def to_dict(self) -> Dict[str, dict]:
         pass
 
 
-class FruitGarden(Place):
+class FruitGardenFields(Enum):
+    SEEDS = "seeds"
+    TREES = "trees"
+    FRUITS = "fruits"
+
+
+class FruitGarden:
     def __init__(self, seeds: List[Seed]) -> None:
-        self._seeds = seeds
+        self._seeds: List[Seed] = seeds
         self._trees: List[Tree] = []
         self._fruits: List[Fruit] = []
 
@@ -49,9 +54,14 @@ class FruitGarden(Place):
         for fruit in self._fruits:
             seed.cb_on_drought()
 
-    def toJSON(self) -> str:
-        json = jsonpickle.encode(self, sort_keys=True, indent=4)
-        return json
+    def to_dict(self) -> Dict[str, dict]:
+        d = dict()
+
+        d[FruitGardenFields.SEEDS.value] = self._seeds.to_dict()
+        d[FruitGardenFields.TREES.value] = self._trees.to_dict()
+        d[FruitGardenFields.FRUITS.value] = self._fruits.to_dict()
+
+        return d
 
 
 class VegetableGarden:

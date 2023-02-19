@@ -1,5 +1,7 @@
-import jsonpickle
 from abc import ABC, abstractmethod
+
+from enum import Enum
+from typing import Dict, Any
 
 from .seed import AppleSeed, Seed
 from .actions import Action, ActionType
@@ -18,8 +20,14 @@ class Tree(ABC):
         pass 
 
     @abstractmethod
-    def toJSON(self) -> str:
+    def to_dict(self) -> Dict[str, Any]:
         pass
+
+
+class AppleTreeFields(Enum):
+    SEED = "seed"
+    CURRENT_GROWTH = "current_growth"
+    IS_GROWTH = "is_growth"
 
 
 class AppleTree(Tree):
@@ -47,6 +55,11 @@ class AppleTree(Tree):
         if self._current_growth == 10:
             self._is_growth = True
 
-    def toJSON(self) -> str:
-        json: str = jsonpickle.encode(self, sort_keys=True, indent=4)
-        return json
+    def to_dict(self) -> Dict[str, Any]:
+        d = dict()
+
+        d[AppleTreeFields.SEED.value] = self._seed.to_dict()
+        d[AppleTreeFields.CURRENT_GROWTH.value] = self._current_growth
+        d[AppleTreeFields.IS_GROWTH.value] = self._is_growth
+
+        return d

@@ -15,6 +15,15 @@ class Simulation:
                 action = Drought()
                 self._fg.handle_action(action)
 
+    def get_info(self) -> dict:
+        info = dict()
+
+        fg_info = self._fg.to_dict()
+        info.update(fg_info)
+
+        return info
+        
+
 
 
     

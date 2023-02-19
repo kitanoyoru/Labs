@@ -1,6 +1,7 @@
-import jsonpickle
-
 from abc import ABC, abstractmethod
+
+from enum import Enum
+from typing import Dict, Any
 
 from .actions import Action, ActionType
 
@@ -23,8 +24,15 @@ class Seed(ABC):
         pass
 
     @abstractmethod
-    def toJSON(self) -> str:
+    def to_dict(self) -> Dict[str, Any]:
         pass
+
+
+class AppleSeedFields(Enum):
+    NAME = "name"
+    GROW_SPEED = "grow_speed"
+    CURRENT_GROWTH = "current_growth"
+    IS_GROWTH = "is_growth"
 
 
 class AppleSeed(Seed):
@@ -56,10 +64,16 @@ class AppleSeed(Seed):
         if self._current_growth > 10:
             self._is_growth = True
 
+    def to_dict(self) -> Dict[str, Any]:
+        d = dict()
 
-    def toJSON(self) -> str:
-        json: str = jsonpickle.encode(self, sort_keys=True, indent=4)
-        return json 
+        d[AppleSeedFields.NAME.value] = self._name
+        d[AppleSeedFields.GROW_SPEED.value] = self._grow_speed
+        d[AppleSeedFields.CURRENT_GROW.value] = self._current_growth
+        d[AppleSeedFields.IS_GROWTH.value] = self._is_growth
+
+        return d
+
 
 
 class TomatoSeed(Seed):
@@ -82,7 +96,7 @@ class TomatoSeed(Seed):
     def handle_action(self, action: Action) -> None:
         action_type: ActionType = action.get_type()
 
-        match ation_type:
+        match action_type:
             case ActionType.DROUGHT:
                 self._cb_on_drought()
 

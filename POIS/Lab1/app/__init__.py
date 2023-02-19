@@ -7,19 +7,19 @@
 
 # from ._settings import settings
 
+from typing import Optional
+
 from flask import Flask
 
-from .backend.server import init_backend
-from .simulation import init_simulation
+from .backend import init_backend
+from .simulation import init_simulation, Simulation
 
 
 class App:
-    simulation: Optional[Simulation] = None
-
-    @classmethod
-    def create_app(cls, n_plants: int) -> Flask:
-        cls.simulation = init_simulation(n_plants)
-        backend = init_backend()
+    @staticmethod
+    def create_app(n_plants: int) -> Flask:
+        sim = init_simulation(n_plants)
+        backend = init_backend(sim)
 
         return backend
 
