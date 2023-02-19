@@ -2,6 +2,7 @@ from ..models.seed import AppleSeed, Seed
 from ..models.place import FruitGarden
 from ..models.actions import ActionType, Drought
 
+
 class Simulation:
     def __init__(self, plants: int) -> None:
         self._n_plants = plants
@@ -22,8 +23,3 @@ class Simulation:
         info.update(fg_info)
 
         return info
-        
-
-
-
-    

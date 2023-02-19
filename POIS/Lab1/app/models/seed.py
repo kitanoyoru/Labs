@@ -38,7 +38,7 @@ class AppleSeedFields(Enum):
 class AppleSeed(Seed):
     def __init__(self) -> None:
         self._name: str = "apple"
-        self._grow_speed: float = 2.1 
+        self._grow_speed: float = 2.1
 
         self._current_growth: float = 0
         self._is_growth: bool = False
@@ -69,17 +69,16 @@ class AppleSeed(Seed):
 
         d[AppleSeedFields.NAME.value] = self._name
         d[AppleSeedFields.GROW_SPEED.value] = self._grow_speed
-        d[AppleSeedFields.CURRENT_GROW.value] = self._current_growth
+        d[AppleSeedFields.CURRENT_GROWTH.value] = self._current_growth
         d[AppleSeedFields.IS_GROWTH.value] = self._is_growth
 
         return d
 
 
-
 class TomatoSeed(Seed):
     def __init__(self) -> None:
-        self._name: str = "tomato" 
-        self._grow_speed: float = 5.4 
+        self._name: str = "tomato"
+        self._grow_speed: float = 5.4
 
         self._current_growth: float = 0
         self._is_growth: bool = False

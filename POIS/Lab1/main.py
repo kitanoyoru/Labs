@@ -2,12 +2,13 @@ from argparse import ArgumentParser, Namespace, ArgumentError
 
 from gevent.pywsgi import WSGIServer
 
-from app import App 
+from app import App
 
 # TODO: nove it to .env
 PROJECT_NAME = "lab1"
 HOST = "localhost"
 PORT = 8080
+
 
 def main() -> None:
     parser = ArgumentParser(prog=PROJECT_NAME, usage="%(prog)s [options]")
@@ -27,4 +28,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

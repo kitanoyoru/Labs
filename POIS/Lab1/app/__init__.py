@@ -7,21 +7,29 @@
 
 # from ._settings import settings
 
-from typing import Optional
+import os
 
 from flask import Flask
+from flask_restful import Api
+from werkzeug.middleware.proxy_fix import ProxyFix
 
-from .backend import init_backend
-from .simulation import init_simulation, Simulation
+from app.simulation import init_simulation, Simulation
+
+from app.api import ControlSimulation
 
 
 class App:
     @staticmethod
-    def create_app(n_plants: int) -> Flask:
-        sim = init_simulation(n_plants)
-        backend = init_backend(sim)
+    def create_app(n: int) -> Flask:
+        app = Flask(__name__)
 
-        return backend
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1)
 
+        sim = init_simulation(n)
 
+        api = Api(app)
+        api.add_resource(
+            ControlSimulation, "/control", resource_class_kwargs={"simulation": sim}
+        )
 
+        return app

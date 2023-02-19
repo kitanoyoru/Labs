@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from enum import Enum 
+from enum import Enum
 from typing import List, Dict
 
 from .actions import Action, ActionType
@@ -57,9 +57,9 @@ class FruitGarden:
     def to_dict(self) -> Dict[str, dict]:
         d = dict()
 
-        d[FruitGardenFields.SEEDS.value] = self._seeds.to_dict()
-        d[FruitGardenFields.TREES.value] = self._trees.to_dict()
-        d[FruitGardenFields.FRUITS.value] = self._fruits.to_dict()
+        d[FruitGardenFields.SEEDS.value] = [seed.to_dict() for seed in self._seeds]
+        d[FruitGardenFields.TREES.value] = [tree.to_dict() for tree in self._trees]
+        d[FruitGardenFields.FRUITS.value] = [fruit.to_dict() for fruit in self._fruits]
 
         return d
 

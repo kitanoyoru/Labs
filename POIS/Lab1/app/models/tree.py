@@ -6,9 +6,10 @@ from typing import Dict, Any
 from .seed import AppleSeed, Seed
 from .actions import Action, ActionType
 
+
 class Tree(ABC):
     @abstractmethod
-    def get_seed(self) -> 'Seed':
+    def get_seed(self) -> "Seed":
         pass
 
     @abstractmethod
@@ -17,7 +18,7 @@ class Tree(ABC):
 
     @abstractmethod
     def handle_action(self, action: Action) -> None:
-        pass 
+        pass
 
     @abstractmethod
     def to_dict(self) -> Dict[str, Any]:
@@ -32,14 +33,14 @@ class AppleTreeFields(Enum):
 
 class AppleTree(Tree):
     def __init__(self, seed: AppleSeed) -> None:
-        self._seed = seed 
+        self._seed = seed
 
-        self._current_growth = 0 
+        self._current_growth = 0
         self._is_growth = False
 
     def get_seed(self) -> Seed:
         return self._seed
-    
+
     def is_growth(self) -> bool:
         return self._is_growth
 

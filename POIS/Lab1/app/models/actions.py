@@ -7,6 +7,7 @@ from enum import Enum
 class ActionType(Enum):
     DROUGHT = 1
 
+
 class Action(ABC):
     @abstractmethod
     def get_type(self) -> ActionType:

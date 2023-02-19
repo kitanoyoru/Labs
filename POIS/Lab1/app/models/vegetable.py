@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 from .seed import Seed
 
+
 class Vegetable(ABC):
     @abstractmethod
     def get_name(self) -> str:
@@ -23,7 +24,7 @@ class Tomato(Vegetable):
         self._name = "tomato"
         self._seed = TomatoSeed()
 
-        self._current_growth = 0 
+        self._current_growth = 0
         self._is_growth = False
 
     def get_seed(self) -> Seed:
