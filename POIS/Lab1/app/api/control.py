@@ -1,9 +1,11 @@
 from flask_restful import Resource, reqparse
 
-from typing import Tuple
+from typing import Tuple, Optional
 
 from app.models.actions import ActionType
 from app.simulation import Simulation
+
+from app._errors import NotFoundSimulationInstance
 
 
 class ControlSimulation(Resource):
@@ -17,7 +19,7 @@ class ControlSimulation(Resource):
     def get(self) -> Tuple[dict, int]:
         try:
             if self._sim is None:
-                raise Exception()
+                raise NotFoundSimulationInstance()
 
             info = self._sim.get_info()
             return {"message": info}, 201

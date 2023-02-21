@@ -1,23 +1,27 @@
 import os
 import json
 
-
-def is_file_exists(path: str) -> bool:
-    return os.path.isfile(path)
+from ._errors import NotFoundPathErr
 
 
-def read_from_json(path: str) -> dict:
-    data = dict()
+class FileUtils:
+    @staticmethod
+    def is_file_exists(path: str) -> bool:
+        return os.path.isfile(path)
 
-    with open(path, "r") as f:
-        data = json.load(f)
+    @staticmethod
+    def read_from_json(path: str) -> dict:
+        data = dict()
 
-    return data
+        with open(path, "r") as f:
+            data = json.load(f)
 
+        return data
 
-def save_in_json(state: dict, path: str) -> None:
-    if path is None:
-        raise NotFoundPathErr()
+    @staticmethod
+    def save_in_json(state: dict, path: str) -> None:
+        if path is None:
+            raise NotFoundPathErr()
 
-    with open(path, "w") as f:
-        json.dump(state, f)
+        with open(path, "w") as f:
+            json.dump(state, f)

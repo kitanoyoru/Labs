@@ -1,31 +1,23 @@
-# from ._metadata import __version__
-
-# from ._utils import check_versions
-
-# check_versions()
-# del check_versions
-
-# from ._settings import settings
-
-import os
-
 from flask import Flask
 from flask_restful import Api
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from app.simulation import init_simulation, Simulation
-
+from app.simulation import Simulation
 from app.api import ControlSimulation
+
+from ._settings import load_settings
 
 
 class App:
     @staticmethod
-    def create_app(n: int) -> Flask:
+    def create_app(n: int, settings_path: str) -> Flask:
+        load_settings(settings_path)
+
         app = Flask(__name__)
 
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1)
 
-        sim = init_simulation(n)
+        sim = Simulation(n)
 
         api = Api(app)
         api.add_resource(

@@ -22,7 +22,7 @@ class State:
         seeds: List[Seed] = []
 
         for raw in data:
-            if raw[SeedFields.NAME.value] == "apple":  # REFACTOR
+            if raw[SeedFields.NAME.value] == "apple": # REFACTOR
                 seed = AppleSeed(
                     current_growth=raw[SeedFields.CURRENT_GROWTH.value],
                     is_growth=raw[SeedFields.IS_GROWTH.value],
@@ -52,7 +52,7 @@ class State:
         fruits: List[Fruit] = []
 
         for raw in data:
-            if raw[FruitsFields.NAME.value] == "apple":  # REFACTOR
+            if raw[FruitFields.NAME.value] == "apple":  # REFACTOR
                 trees = State.get_trees(raw[FruitFields.TREE.value])
                 fruit = AppleFruit(
                     tree=trees[0],

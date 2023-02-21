@@ -64,8 +64,3 @@ class FruitGarden:
         d[PlaceFields.FRUITS.value] = [fruit.to_dict() for fruit in self._fruits]
 
         return d
-
-
-class VegetableGarden:
-    def __init__(self) -> None:
-        pass
