@@ -21,18 +21,21 @@ class Fruit(ABC):
         pass
 
 
-class AppleFruitFields(Enum):
+class FruitFields(Enum):
+    NAME = "name"
     TREE = "tree"
     CURRENT_GROWTH = "current_growth"
     IS_GROWTH = "is_growth"
 
 
 class AppleFruit:
-    def __init__(self, tree: Tree) -> None:
-        self._tree = tree
+    def __init__(self, tree: Tree, current_growth: float = 0, is_growth: bool = False) -> None:
+        self._name = "apple"
 
-        self._current_growth = 0
-        self._is_growth = False
+        self._tree: Tree = tree
+
+        self._current_growth: float = current_growth
+        self._is_growth: bool = is_growth
 
     def get_tree(self) -> Tree:
         return self._tree
@@ -53,8 +56,9 @@ class AppleFruit:
     def to_dict(self) -> Dict[str, Any]:
         d = dict()
 
-        d[AppleFruitFields.TREE.value] = self._tree.to_dict()
-        d[AppleFruitFields.CURRENT_GROWTH.value] = self._current_growth
-        d[AppleFruitFields.IS_GROWTH.value] = self._is_growth
+        d[FruitFields.NAME.value] = self._name
+        d[FruitFields.TREE.value] = self._tree.to_dict()
+        d[FruitFields.CURRENT_GROWTH.value] = self._current_growth
+        d[FruitFields.IS_GROWTH.value] = self._is_growth
 
         return d

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from enum import Enum
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from .actions import Action, ActionType
 from .seed import Seed
@@ -19,17 +19,17 @@ class Place(ABC):
         pass
 
 
-class FruitGardenFields(Enum):
+class PlaceFields(Enum):
     SEEDS = "seeds"
     TREES = "trees"
     FRUITS = "fruits"
 
 
 class FruitGarden:
-    def __init__(self, seeds: List[Seed]) -> None:
-        self._seeds: List[Seed] = seeds
-        self._trees: List[Tree] = []
-        self._fruits: List[Fruit] = []
+    def __init__(self, seeds: List[Seed]=[], trees: List[Seed]=[], fruits: List[Seed]=[]) -> None:
+        self._seeds: Optional[List[Seed]] = seeds
+        self._trees: Optional[List[Tree]] = trees
+        self._fruits: Optional[List[Fruit]] = fruits
 
     def handle_action(self, action: Action) -> None:
         action_type: ActionType = action.get_type()
@@ -39,27 +39,29 @@ class FruitGarden:
                 self._cb_on_drought()
 
     def _cb_on_drought(self) -> None:
-        for seed in self._seeds:
-            seed.cb_on_drought()
+        for i, seed in enumerate(self._seeds):
+            seed._cb_on_drought()
             if seed.is_growth():
                 tree = AppleTree(seed)
-                self._trees.append(tree)
+                self._trees.append(tree) # TODO: Delete seed from _seeds
+                self._seeds.pop(i)
 
-        for tree in self._trees:
-            seed.cb_on_drought()
+        for i, tree in enumerate(self._trees):
+            tree._cb_on_drought()
             if tree.is_growth():
                 fruit = AppleFruit(tree)
                 self._fruits.append(fruit)
+                self._trees.pop(i)
 
         for fruit in self._fruits:
-            seed.cb_on_drought()
+            fruit._cb_on_drought()
 
     def to_dict(self) -> Dict[str, dict]:
         d = dict()
 
-        d[FruitGardenFields.SEEDS.value] = [seed.to_dict() for seed in self._seeds]
-        d[FruitGardenFields.TREES.value] = [tree.to_dict() for tree in self._trees]
-        d[FruitGardenFields.FRUITS.value] = [fruit.to_dict() for fruit in self._fruits]
+        d[PlaceFields.SEEDS.value] = [seed.to_dict() for seed in self._seeds]
+        d[PlaceFields.TREES.value] = [tree.to_dict() for tree in self._trees]
+        d[PlaceFields.FRUITS.value] = [fruit.to_dict() for fruit in self._fruits]
 
         return d
 

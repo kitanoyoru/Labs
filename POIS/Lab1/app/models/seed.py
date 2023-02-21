@@ -28,7 +28,7 @@ class Seed(ABC):
         pass
 
 
-class AppleSeedFields(Enum):
+class SeedFields(Enum):
     NAME = "name"
     GROW_SPEED = "grow_speed"
     CURRENT_GROWTH = "current_growth"
@@ -36,12 +36,12 @@ class AppleSeedFields(Enum):
 
 
 class AppleSeed(Seed):
-    def __init__(self) -> None:
+    def __init__(self, current_growth: float = 0, is_growth: bool = False) -> None:
         self._name: str = "apple"
         self._grow_speed: float = 2.1
 
-        self._current_growth: float = 0
-        self._is_growth: bool = False
+        self._current_growth: float = current_growth
+        self._is_growth: bool = is_growth
 
     def get_name(self) -> str:
         return self._name
@@ -67,10 +67,10 @@ class AppleSeed(Seed):
     def to_dict(self) -> Dict[str, Any]:
         d = dict()
 
-        d[AppleSeedFields.NAME.value] = self._name
-        d[AppleSeedFields.GROW_SPEED.value] = self._grow_speed
-        d[AppleSeedFields.CURRENT_GROWTH.value] = self._current_growth
-        d[AppleSeedFields.IS_GROWTH.value] = self._is_growth
+        d[SeedFields.NAME.value] = self._name
+        d[SeedFields.GROW_SPEED.value] = self._grow_speed
+        d[SeedFields.CURRENT_GROWTH.value] = self._current_growth
+        d[SeedFields.IS_GROWTH.value] = self._is_growth
 
         return d
 

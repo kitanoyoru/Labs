@@ -20,7 +20,7 @@ class ControlSimulation(Resource):
                 raise Exception()
 
             info = self._sim.get_info()
-            return {"message": f"{info}"}, 201
+            return {"message": info}, 201
         except Exception as exc:
             return {"message": f"failed: {exc}"}, 500
 

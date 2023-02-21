@@ -25,18 +25,21 @@ class Tree(ABC):
         pass
 
 
-class AppleTreeFields(Enum):
+class TreeFields(Enum):
+    NAME = "name"
     SEED = "seed"
     CURRENT_GROWTH = "current_growth"
     IS_GROWTH = "is_growth"
 
 
 class AppleTree(Tree):
-    def __init__(self, seed: AppleSeed) -> None:
+    def __init__(self, seed: AppleSeed, current_growth: float = 0, is_growth: bool = False) -> None:
+        self._name = "apple"
+
         self._seed = seed
 
-        self._current_growth = 0
-        self._is_growth = False
+        self._current_growth: float = current_growth
+        self._is_growth: bool = is_growth
 
     def get_seed(self) -> Seed:
         return self._seed
@@ -53,14 +56,15 @@ class AppleTree(Tree):
 
     def _cb_on_drought(self) -> None:
         self._current_growth += self._seed.get_initial_grow_speed()
-        if self._current_growth == 10:
+        if self._current_growth > 10:
             self._is_growth = True
 
     def to_dict(self) -> Dict[str, Any]:
         d = dict()
 
-        d[AppleTreeFields.SEED.value] = self._seed.to_dict()
-        d[AppleTreeFields.CURRENT_GROWTH.value] = self._current_growth
-        d[AppleTreeFields.IS_GROWTH.value] = self._is_growth
+        d[TreeFields.NAME.value] = self._name
+        d[TreeFields.SEED.value] = self._seed.to_dict()
+        d[TreeFields.CURRENT_GROWTH.value] = self._current_growth
+        d[TreeFields.IS_GROWTH.value] = self._is_growth
 
         return d

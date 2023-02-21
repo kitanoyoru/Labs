@@ -1,19 +1,38 @@
-[project]
+[tool.poetry]
 name = "kitalab"
 version = "0.0.1"
-description = "POIS lab1 4 sem"
-requires-python = ">=3.7"
-license = {file = "LICENSE"}
+description = "POIS lab1"
 authors = [
-    {name = "Alexandr Rutkovskij"},
+    "Alexandr Rutkovskij <kitanoyoru@protonmail.com>",
 ]
-maintainers = [
-    {name = "Alexandr Rustkovskij", email = "kitanoyoru@protonmail.com"}
-]
-readme = {file = "README.md", content-type = "text/markdown"}
-dependencies = [
-    "requests",
-    "fastapi",
-    "pymongo",
-    'importlib-metadata; python_version<"3.8"',
-]
+license = "MIT" 
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+flask = "^2.2.2"
+flask-restful = "^0.3.9"
+dotenv = "^1.0.0"
+
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+requests = "^2.23.0"
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 88
+target_version = ['py38']
+exclude = '''
+(
+  /(
+    \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | htmlcov
+    | venv
+    | .venv
+  )/
+)
+'''
