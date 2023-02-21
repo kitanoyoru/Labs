@@ -1,8 +1,6 @@
 // https://cs.opensource.google/go/go/+/refs/tags/go1.20:src/strconv/itoa.go;drc=fb79da299127b3ff85e14f37e4616a26e6c2a720;l=88
 
-package main
-
-import "fmt"
+package utils
 
 const deBruijn32 = 0x077CB531
 
@@ -45,9 +43,4 @@ func FormatBitsWithBaseTwo(num uint64, sign bool) []byte {
 
 func getTrailingZeros(x uint) int {
 	return int(deBruijn32tab[(x&-x)*deBruijn32>>(32-5)])
-}
-
-func main() {
-	a := 30
-	fmt.Printf("%v\n", FormatBitsWithBaseTwo(uint64(a), a < 0))
 }
