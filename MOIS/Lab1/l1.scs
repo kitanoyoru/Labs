@@ -5,7 +5,7 @@ lab1=[*
 		section_subject_domain_of_major_bookstore(*<-sc_node_struct;;*);
 		section_subject_domain_of_bookselling_chains_bookstore(*<-sc_node_struct;;*);	
 		section_subject_domain_of_independent_bookstore(*<-sc_node_struct;;*);
-		section_subject_domain_of_publisher_bookstore(*<-sc_node_struct;;*);	
+		section_subject_domain_of_publisher_bookstore(*<-sc_node_struct;;*)
 	};;
 	section_subject_domain_of_fotball->rrel_key_sc_element:subject_domain_of_bookstore(*<-sc_node_struct;;*);
 	concept_book(*<-sc_node_class;;*);
@@ -16,9 +16,7 @@ lab1=[*
         nrel_book_size(*<-sc_node_norole_relation;;*);
         nrel_reading_room_size(*<-sc_node_norole_relation;;*);
 	nrel_number_of_vendors(*<-sc_node_norole_relation;;*);
-        nrel_number_of_consultants(*<-sc_node_norole_relation;;*);
-
-	//section_subject_domain_of_bookstore => nrel_system_idtf:[section_subject_domain_of_bookstore];;
+        nrel_number_of_consultants(*<-sc_node_norole_relation;;*);;
 
         section_subject_domain_of_bookstore => nrel_main_idtf:
         	[Раздел.Предметная область книжный магазин]
@@ -39,7 +37,7 @@ lab1=[*
     
     	subject_domain_of_bookstore => nrel_main_idtf:
         	[Subject domain of bookstore]
-        	(* <- lang_en;; *);;
+        	(* <- lang_;; *);;
 
     	subject_domain_of_bookstore=>nrel_private_subject_domain:
 		subject_domain_of_major_bookstore(*<-sc_node_struct;;*);

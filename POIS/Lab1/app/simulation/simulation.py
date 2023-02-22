@@ -6,7 +6,7 @@ from enum import Enum
 from ..models.seed import AppleSeed, Seed
 from ..models.place import FruitGarden
 from ..models.state import State
-from ..models.actions import ActionType, Drought
+from ..models.actions import ActionType, Irrigation, Drought
 
 from app._settings import *
 from app._utils import FileUtils
@@ -25,6 +25,9 @@ class Simulation:
 
     def call_action(self, action_type: ActionType) -> None:
         match action_type:
+            case ActionType.IRRIGATION:
+                action = Irrigation()
+                self._fg.handle_action(action)
             case ActionType.DROUGHT:
                 action = Drought()
                 self._fg.handle_action(action)

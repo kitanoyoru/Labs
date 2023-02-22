@@ -29,29 +29,39 @@ class FruitFields(Enum):
 
 
 class AppleFruit:
-    def __init__(self, tree: Tree, current_growth: float = 0, is_growth: bool = False) -> None:
+    def __init__(self, tree: Tree, current_growth: float = 0, is_growth: bool = False, is_wilt: bool = False) -> None:
         self._name = "apple"
 
         self._tree: Tree = tree
 
         self._current_growth: float = current_growth
         self._is_growth: bool = is_growth
+        self._is_wilt: bool = is_wilt
 
     def get_tree(self) -> Tree:
         return self._tree
-
+        
     def handle_action(self, action: Action) -> None:
         action_type: ActionType = action.get_type()
 
         match action_type:
+            case ActionType.IRRIGATION:
+                self._cb_on_irrigation()
             case ActionType.DROUGHT:
                 self._cb_on_drought()
 
-    def _cb_on_drought(self) -> "None":
+    def _cb_on_irrigation(self) -> None:
         if self._tree.is_growth():
             self._current_growth += self._tree.get_seed().get_initial_grow_speed()
             if self._current_growth > 10:
                 self._is_growth = True
+
+    def _cb_on_drought(self) -> None:
+        if self._tree.is_growth():
+            self._current_growth -= self._tree.get_seed().get_initial_grow_speed()
+            if self._current_growth < 0:
+                self._is_growth = False
+                self._is_wilt = True
 
     def to_dict(self) -> Dict[str, Any]:
         d = dict()

@@ -4,7 +4,8 @@ from enum import Enum
 
 class ActionType(Enum):
     DROUGHT = 1
-    QUIT = 2
+    IRRIGATION = 2
+    QUIT = 3
 
 
 class Action(ABC):
@@ -16,6 +17,14 @@ class Action(ABC):
 class Drought:
     def __init__(self) -> None:
         self._type = ActionType.DROUGHT
+
+    def get_type(self) -> ActionType:
+        return self._type
+
+
+class Irrigation:
+    def __init__(self) -> None:
+        self._type = ActionType.IRRIGATION
 
     def get_type(self) -> ActionType:
         return self._type
