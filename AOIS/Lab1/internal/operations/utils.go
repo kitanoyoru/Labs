@@ -1,4 +1,4 @@
-package straight
+package operations
 
 func makeBinaryLenEqual(x, y []byte) ([]byte, []byte, int) {
 	xlen, ylen := len(x), len(y)

@@ -1,0 +1,71 @@
+lab1=[*
+	sc_node_struct->section_subject_domain_of_bookstore;;
+
+	section_subject_domain_of_bookstore<=nrel_section_decomposition:{
+		section_subject_domain_of_major_bookstore(*<-sc_node_struct;;*);
+		section_subject_domain_of_bookselling_chains_bookstore(*<-sc_node_struct;;*);	
+		section_subject_domain_of_independent_bookstore(*<-sc_node_struct;;*);
+		section_subject_domain_of_publisher_bookstore(*<-sc_node_struct;;*);	
+	};;
+	section_subject_domain_of_fotball->rrel_key_sc_element:subject_domain_of_bookstore(*<-sc_node_struct;;*);
+	concept_book(*<-sc_node_class;;*);
+	concept_shelf(*<-sc_node_class;;*);
+	concept_reading_room(*<-sc_node_class;;*);
+	concept_consultant(*<-sc_node_class;;*);
+	concept_vendor(*<-sc_node_class;;*);
+        nrel_book_size(*<-sc_node_norole_relation;;*);
+        nrel_reading_room_size(*<-sc_node_norole_relation;;*);
+	nrel_number_of_vendors(*<-sc_node_norole_relation;;*);
+        nrel_number_of_consultants(*<-sc_node_norole_relation;;*);
+
+	//section_subject_domain_of_bookstore => nrel_system_idtf:[section_subject_domain_of_bookstore];;
+
+        section_subject_domain_of_bookstore => nrel_main_idtf:
+        	[Раздел.Предметная область книжный магазин]
+        	(* <- lang_ru;; *);;
+
+	section_subject_domain_of_bookstore => nrel_main_idtf:
+		[Section.Subject domain of bookstore]
+        	(* <- lang_en;; *);;
+    
+	concept_consultant<-rrel_not_maximum_studied_object_class:subject_domain_of_bookstore;;
+	concept_vendor<-rrel_not_maximum_studied_object_class:subject_domain_of_bookstore;;
+    
+	section_subject_domain_of_bookstore<-non_atomic_section;;
+
+	subject_domain_of_bookstore => nrel_main_idtf:
+        	[Предметная область книжный магазин]
+        	(* <- lang_ru;; *);;
+    
+    	subject_domain_of_bookstore => nrel_main_idtf:
+        	[Subject domain of bookstore]
+        	(* <- lang_en;; *);;
+
+    	subject_domain_of_bookstore=>nrel_private_subject_domain:
+		subject_domain_of_major_bookstore(*<-sc_node_struct;;*);
+        	subject_domain_of_bookselling_chains_bookstore(*<-sc_node_struct;;*);
+        	subject_domain_of_independent_bookstore(*<-sc_node_struct;;*);
+	        subject_domain_of_publisher_bookstore(*<-sc_node_struct;;*);;
+
+	subject_domain_of_bookstore<=nrel_private_subject_domain:subject_domain_of_store(*<-sc_node_struct;;*);;
+
+	subject_domain_of_football->rrel_maximum_studied_object_class:concept_book;;
+
+    
+        subject_domain_of_bookstore->rrel_explored_relation:
+        	nrel_book_size;
+        	nrel_reading_room_size;
+        	nrel_number_of_vendors;
+        	nrel_number_of_consultants;;
+    
+    	subject_domain_of_bookstore<-subject_domain;;
+*];;		
+
+
+
+
+
+
+
+
+

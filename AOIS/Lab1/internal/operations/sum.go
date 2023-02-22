@@ -1,7 +1,7 @@
-package straight
+package operations
 
 import (
-	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/code"
 )
 
 // https://stackoverflow.com/questions/61748010/algorithms-add-two-n-bit-binary-numbers-what-is-a-loop-invariant-of-this-probl
@@ -12,8 +12,8 @@ func Sum(a, b int64) []byte {
 		return Sub(a, -b)
 	}
 
-	x := utils.FormatBitsWithBaseTwo(uint64(a), a < 0)
-	y := utils.FormatBitsWithBaseTwo(uint64(b), b < 0)
+	x := code.GetStraightCode(a)
+	y := code.GetStraightCode(b)
 
 	var sign bool
 	if a < 0 && b < 0 {
@@ -21,6 +21,12 @@ func Sum(a, b int64) []byte {
 		x, y = x[1:], y[1:]
 	}
 
+	res := baseSum(x, y, sign)
+
+	return res
+}
+
+func baseSum(x, y []byte, sign bool) []byte {
 	var res []byte
 	var carry byte
 
