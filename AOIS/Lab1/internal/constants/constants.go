@@ -1,17 +1,14 @@
 package constants
 
-var Zero64InBytes []byte
-var One64InBytes []byte
+var Max32InBytes []byte
+var Zero32InBytes []byte
+var One32InBytes []byte
 
 func init() {
-	patternZero := []byte{0, 0, 0, 0}
-	patternOne := []byte{1, 1, 1, 1}
-
-	copy(Zero64InBytes, patternZero)
-	copy(One64InBytes, patternOne)
-
-	for i := 0; i < 64; i *= 2 {
-		copy(Zero64InBytes[i:], Zero64InBytes[:i])
-		copy(One64InBytes[i:], One64InBytes[:i])
+	for i := 0; i < 32; i++ {
+		Max32InBytes = append(Max32InBytes, 1)
+		Zero32InBytes = append(Zero32InBytes, 0)
+		One32InBytes = append(One32InBytes, 0)
 	}
+	One32InBytes[31] = 1
 }

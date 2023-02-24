@@ -2,13 +2,11 @@ package code
 
 import "github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
 
-func GetReverseCode(x int64) []byte {
-	ans := utils.FormatBitsWithBaseTwo(uint64(x), x < 0)
-	if x < 0 {
-		for i := 1; i < len(ans); i++ {
-			ans[i] ^= 1
-		}
-	}
+func GetReverseCode(x int) []byte {
+	res := utils.FormatBitsWithBaseTwo(uint32(x), x < 0)
+	return Straight2Reverse(res)
+}
 
-	return ans
+func Reverse2Straight(bytes []byte) []byte {
+	return Straight2Reverse(bytes)
 }

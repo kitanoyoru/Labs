@@ -1,18 +1,20 @@
 package code
 
-import "github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
+import (
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/constants"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/raw"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
+)
 
-func GetAdditionalCode(x int64) []byte {
-	ans := utils.FormatBitsWithBaseTwo(uint64(x), x < 0)
-	if x < 0 {
-		for i := 1; i < len(ans); i++ {
-			if ans[i] == 1 {
-				ans = append(ans, 0)
-			} else if ans[i] == 0 {
-				ans = append(ans, 1)
-			}
-		}
+func GetAdditionalCode(x int) []byte {
+	ans := utils.FormatBitsWithBaseTwo(uint32(x), x < 0)
+	return Straight2Additional(ans)
+}
+
+func Addition2Reverse(bytes []byte) []byte {
+	if bytes[0] == 0 {
+		return bytes
 	}
 
-	return ans
+	return raw.RawSum(bytes, constants.Max32InBytes)
 }

@@ -11,8 +11,8 @@ var deBruijn32tab = [32]byte{
 	31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9,
 }
 
-func FormatBitsWithBaseTwo(num uint64, sign bool) []byte {
-	var a [64 + 1]byte // 64bits + 1 for sign
+func FormatBitsWithBaseTwo(num uint32, sign bool) []byte {
+	var a [32]byte // 64bits + 1 for sign
 
 	i := len(a)
 
@@ -21,7 +21,7 @@ func FormatBitsWithBaseTwo(num uint64, sign bool) []byte {
 	}
 
 	shift := uint(getTrailingZeros(uint(2))) & 7
-	base := uint64(2)
+	base := uint32(2)
 	mask := uint(base) - 1 // == 1 << shift - 1
 
 	for num >= base {
@@ -34,11 +34,10 @@ func FormatBitsWithBaseTwo(num uint64, sign bool) []byte {
 	a[i] = digits[uint(num)] - 48
 
 	if sign {
-		i--
-		a[i] = '1' - 48
+		a[0] = '1' - 48
 	}
 
-	return a[i:]
+	return a[:]
 }
 
 func getTrailingZeros(x uint) int {
