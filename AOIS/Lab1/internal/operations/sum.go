@@ -6,22 +6,22 @@ import (
 
 // https://stackoverflow.com/questions/61748010/algorithms-add-two-n-bit-binary-numbers-what-is-a-loop-invariant-of-this-probl
 func Sum(a, b int64) []byte {
-	if a < 0 && b > 0 {
-		return Sub(b, -a)
-	} else if a > 0 && b < 0 {
-		return Sub(a, -b)
-	}
-
 	x := code.GetStraightCode(a)
 	y := code.GetStraightCode(b)
 
+	res := RawSum(x, y)
+
+	return res
+}
+
+func RawSum(a, b []byte) []byte {
 	var sign bool
-	if a < 0 && b < 0 {
-		sign = true
-		x, y = x[1:], y[1:]
+	if a[0] == 0 && b[0] == 0 {
+		sign = false
+		a, b = a[1:], b[1:]
 	}
 
-	res := baseSum(x, y, sign)
+	res := baseSum(a, b, sign)
 
 	return res
 }
