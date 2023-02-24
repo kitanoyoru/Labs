@@ -18,7 +18,7 @@ func Mult(a, b int64) []byte {
 		sign = true
 	}
 
-	x, y = x[1:], y[1:]
+	x[0], y[0] = 0, 0
 
 	for NotEqual(y, constants.Zero64InBytes) {
 		res = RawSum(x, res)

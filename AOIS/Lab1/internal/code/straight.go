@@ -2,7 +2,7 @@ package code
 
 import (
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/constants"
-	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/operations"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/raw"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
 )
 
@@ -31,7 +31,7 @@ func Straight2Additional(bytes []byte) []byte {
 		}
 	}
 
-	ans = operations.RawSum(ans, constants.One64InBytes)
+	ans = raw.RawSum(ans, constants.One64InBytes)
 
 	return ans
 }

@@ -1,19 +1,4 @@
-package operations
-
-import (
-	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/code"
-	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/raw"
-)
-
-// https://stackoverflow.com/questions/61748010/algorithms-add-two-n-bit-binary-numbers-what-is-a-loop-invariant-of-this-probl
-func Sum(a, b int64) []byte {
-	x := code.GetStraightCode(a)
-	y := code.GetStraightCode(b)
-
-	res := RawSum(x, y)
-
-	return res
-}
+package raw
 
 func RawSum(a, b []byte) []byte {
 	var sign bool
@@ -31,7 +16,7 @@ func baseSum(x, y []byte, sign bool) []byte {
 	var res []byte
 	var carry byte
 
-	x, y, n := raw.MakeBinaryLenEqual(x, y)
+	x, y, n := MakeBinaryLenEqual(x, y)
 
 	for i := n - 1; i >= 0; i-- {
 		fb, sb := x[i], y[i]
@@ -51,4 +36,20 @@ func baseSum(x, y []byte, sign bool) []byte {
 	}
 
 	return res
+}
+
+func MakeBinaryLenEqual(x, y []byte) ([]byte, []byte, int) {
+	xlen, ylen := len(x), len(y)
+	if xlen < ylen {
+		for i := 0; i < ylen-xlen; i++ {
+			x = append([]byte{0}, x...)
+		}
+		return x, y, ylen
+	} else if xlen > ylen {
+		for i := 0; i < xlen-ylen; i++ {
+			y = append([]byte{0}, y...)
+		}
+	}
+
+	return x, y, xlen
 }
