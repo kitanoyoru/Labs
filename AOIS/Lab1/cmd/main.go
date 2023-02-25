@@ -34,5 +34,15 @@ func main() {
 	log.Infof("X + Y   = %v\n", operations.Sum(first, second))
 	log.Infof("X - Y   = %v\n", operations.Sum(first, -second))
 	log.Infof("- X + Y = %v\n", operations.Sum(-first, second))
-	log.Infof("- X - Y = %v\n", operations.Sum(-first, -second))
+	log.Infof("- X - Y = %v\n\n", operations.Sum(-first, -second))
+
+	log.Infof("X * Y       = %v\n", operations.Mul(first, second))
+	log.Infof("X * (-Y)    = %v\n", operations.Mul(first, -second))
+	log.Infof("(-X) + Y    = %v\n", operations.Mul(-first, second))
+	log.Infof("(-X) * (-Y) = %v\n\n", operations.Mul(-first, -second))
+
+	log.Infof("X / Y       = %v\n", operations.Div(first, second))
+	log.Infof("X / (-Y)    = %v\n", operations.Div(first, -second))
+	log.Infof("(-X) / Y    = %v\n", operations.Div(-first, second))
+	log.Infof("(-X) / (-Y) = %v\n\n", operations.Div(-first, -second))
 }

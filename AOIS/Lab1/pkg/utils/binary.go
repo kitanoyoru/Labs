@@ -40,6 +40,16 @@ func FormatBitsWithBaseTwo(num uint32, sign bool) []byte {
 	return a[:]
 }
 
+func TrimLeftZero(bytes []byte) []byte {
+	for i, b := range bytes {
+		if b == 1 {
+			return bytes[i:]
+		}
+	}
+
+	return []byte{}
+}
+
 func getTrailingZeros(x uint) int {
 	return int(deBruijn32tab[(x&-x)*deBruijn32>>(32-5)])
 }
