@@ -15,6 +15,11 @@ func Mul(a, b int) []byte {
 		sign = true
 	}
 
+	return RawMul(x, y, sign)
+
+}
+
+func RawMul(x, y []byte, sign bool) []byte {
 	x[0], y[0] = 0, 0
 
 	res := constants.Zero32InBytes

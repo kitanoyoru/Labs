@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"os"
+	"strconv"
 
-	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/code"
-	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/operations"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/cmd/cli"
 	"github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 )
@@ -15,34 +15,27 @@ func main() {
 		Out:   os.Stdout,
 		Level: logrus.DebugLevel,
 		Formatter: &easy.Formatter{
-			TimestampFormat: "2006-01-02 15:04:05",
-			LogFormat:       "%msg%",
+			LogFormat: "%msg%",
 		},
 	}
 
-	fistNumPtr := flag.Int("first", 0, "First number")
-	secondNumPtr := flag.Int("second", 0, "Second number")
+	firstNumPtr := flag.String("first", "0", "First number")
+	secondNumPtr := flag.String("second", "0", "Second number")
+	intModePtr := flag.Bool("float-mode", false, "Usage mode")
 
 	flag.Parse()
 
-	first := *fistNumPtr
-	second := *secondNumPtr
+	mode := *intModePtr
 
-	log.Infof("First:\n\tStraight:   %v\n\tReverse:    %v\n\tAdditional: %v\n", code.GetStraightCode(first), code.GetReverseCode(first), code.GetAdditionalCode(first))
-	log.Infof("Second:\n\tStraight:   %v\n\tReverse:    %v\n\tAdditional: %v\n\n", code.GetStraightCode(second), code.GetReverseCode(second), code.GetAdditionalCode(second))
+	if mode {
+		first, _ := strconv.ParseFloat(*firstNumPtr, 32)
+		second, _ := strconv.ParseFloat(*secondNumPtr, 32)
 
-	log.Infof("X + Y   = %v\n", operations.Sum(first, second))
-	log.Infof("X - Y   = %v\n", operations.Sum(first, -second))
-	log.Infof("- X + Y = %v\n", operations.Sum(-first, second))
-	log.Infof("- X - Y = %v\n\n", operations.Sum(-first, -second))
+		cli.ForFloat(float32(first), float32(second), log)
+	} else {
+		first, _ := strconv.Atoi(*firstNumPtr)
+		second, _ := strconv.Atoi(*secondNumPtr)
 
-	log.Infof("X * Y       = %v\n", operations.Mul(first, second))
-	log.Infof("X * (-Y)    = %v\n", operations.Mul(first, -second))
-	log.Infof("(-X) + Y    = %v\n", operations.Mul(-first, second))
-	log.Infof("(-X) * (-Y) = %v\n\n", operations.Mul(-first, -second))
-
-	log.Infof("X / Y       = %v\n", operations.Div(first, second))
-	log.Infof("X / (-Y)    = %v\n", operations.Div(first, -second))
-	log.Infof("(-X) / Y    = %v\n", operations.Div(-first, second))
-	log.Infof("(-X) / (-Y) = %v\n\n", operations.Div(-first, -second))
+		cli.ForInt(first, second, log)
+	}
 }

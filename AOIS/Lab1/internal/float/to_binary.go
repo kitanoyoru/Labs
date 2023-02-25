@@ -8,10 +8,6 @@ import (
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
 )
 
-const BIAS = 127
-
-// https://www.wikihow.com/Convert-a-Number-from-Decimal-to-IEEE-754-Floating-Point-Representation
-
 func ToBinary(num float32) []byte {
 	var sign bool
 	if num < 0 {
@@ -48,7 +44,7 @@ func ToBinary(num float32) []byte {
 		afterPoint = temp
 	}
 
-	expBytes := code.GetStraightCode(len(parsedBefore) - 1 + BIAS)[24:]
+	expBytes := code.GetStraightCode(len(parsedBefore) - 1)[24:]
 
 	mantBytes := append(parsedBefore[1:], parsedAfter...)
 	if len(mantBytes) > 23 {
@@ -58,6 +54,7 @@ func ToBinary(num float32) []byte {
 			mantBytes = append(mantBytes, 0)
 		}
 	}
+	utils.ReverseSlice(&mantBytes)
 
 	res := []byte{}
 	if sign {
