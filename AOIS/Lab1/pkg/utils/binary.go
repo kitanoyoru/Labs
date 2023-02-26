@@ -2,6 +2,10 @@
 
 package utils
 
+import (
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/constants"
+)
+
 const deBruijn32 = 0x077CB531
 
 const digits = "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -41,6 +45,9 @@ func FormatBitsWithBaseTwo(num uint32, sign bool) []byte {
 }
 
 func TrimLeftZero(bytes []byte) []byte {
+	if Equal(bytes, constants.Zero32InBytes) {
+		return []byte{0}
+	}
 	for i, b := range bytes {
 		if b == 1 {
 			return bytes[i:]

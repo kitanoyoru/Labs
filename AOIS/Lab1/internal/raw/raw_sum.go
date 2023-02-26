@@ -6,23 +6,23 @@ import (
 
 func RawSum(a, b []byte) []byte {
 	res := []byte{}
-	flag := false
+	carry := false
 
 	for i := len(a); i > 0; i-- {
-		if (!flag && a[i-1] == 0 && b[i-1] == 0) || (flag && ((a[i-1] == 1 && b[i-1] == 0) || (a[i-1] == 0 && b[i-1] == 1))) {
+		if (!carry && a[i-1] == 0 && b[i-1] == 0) || (carry && ((a[i-1] == 1 && b[i-1] == 0) || (a[i-1] == 0 && b[i-1] == 1))) {
 			res = append(res, 0)
 		}
-		if (flag && a[i-1] == 1 && b[i-1] == 1) || (!flag && ((a[i-1] == 1 && b[i-1] == 0) || (a[i-1] == 0 && b[i-1] == 1))) {
+		if (carry && a[i-1] == 1 && b[i-1] == 1) || (!carry && ((a[i-1] == 1 && b[i-1] == 0) || (a[i-1] == 0 && b[i-1] == 1))) {
 			res = append(res, 1)
 		}
-		if (flag && a[i-1] == 0 && b[i-1] == 0) || (!flag && a[i-1] == 1 && b[i-1] == 1) {
-			if flag {
+		if (carry && a[i-1] == 0 && b[i-1] == 0) || (!carry && a[i-1] == 1 && b[i-1] == 1) {
+			if carry {
 				res = append(res, 1)
 			} else {
 				res = append(res, 0)
 			}
 
-			flag = !flag
+			carry = !carry
 		}
 	}
 

@@ -5,13 +5,14 @@ import (
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/constants"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/operations"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/raw"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
 )
 
 func Sum(a, b float32) []byte {
 	x := ToBinary(a)
 	y := ToBinary(b)
 
-	if operations.GreaterOrEqual(y[1:9], x[1:9]) {
+	if utils.GreaterOrEqual(y[1:9], x[1:9]) {
 		x, y = y, x
 	}
 
@@ -20,7 +21,7 @@ func Sum(a, b float32) []byte {
 		usignedMantissaX = append([]byte{0}, usignedMantissaX...)
 	}
 
-	for operations.NotEqual(x[1:9], y[1:9]) {
+	for utils.NotEqual(x[1:9], y[1:9]) {
 		copy(x[1:9], raw.RawSum(x[1:9], constants.MinusOne8InBytes))
 		copy(x[9:], operations.RawMul(usignedMantissaX, code.GetStraightCode(10), false)[9:])
 	}

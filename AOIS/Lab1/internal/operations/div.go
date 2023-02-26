@@ -4,6 +4,7 @@ import (
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/code"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/constants"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/raw"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
 )
 
 func Div(a, b int) []byte {
@@ -18,7 +19,7 @@ func Div(a, b int) []byte {
 	x[0], y[0] = 0, 0
 
 	res := constants.Zero32InBytes
-	for GreaterOrEqual(x, y) {
+	for utils.GreaterOrEqual(x, y) {
 		y[0] = 1
 		x = raw.RawSum(x, code.Straight2Additional(y))
 		res = raw.RawSum(res, constants.One32InBytes)

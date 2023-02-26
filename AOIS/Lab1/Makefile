@@ -1,4 +1,4 @@
-earuild:
+build:
 	go build -o bin/main cmd/main.go
 
 compile:
@@ -6,3 +6,6 @@ compile:
 	GOOS=linux GOARCH=arm go build -o bin/main-linux-arm cmd/main.go
 	GOOS=linux GOARCH=arm64 go build -o bin/main-linux-arm64 cmd/main.go
 	GOOS=freebsd GOARCH=386 go build -o bin/main-freebsd-386 cmd/main.go
+
+clean:
+	rm -rf bin

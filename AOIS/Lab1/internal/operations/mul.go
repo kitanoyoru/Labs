@@ -4,6 +4,7 @@ import (
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/code"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/constants"
 	"github.com/kitanoyoru/Labs/AOIS/Lab1/internal/raw"
+	"github.com/kitanoyoru/Labs/AOIS/Lab1/pkg/utils"
 )
 
 func Mul(a, b int) []byte {
@@ -23,7 +24,7 @@ func RawMul(x, y []byte, sign bool) []byte {
 	x[0], y[0] = 0, 0
 
 	res := constants.Zero32InBytes
-	for NotEqual(y, constants.Zero32InBytes) {
+	for utils.NotEqual(y, constants.Zero32InBytes) {
 		res = raw.RawSum(res, x)
 		y = raw.RawSum(y, constants.Max32InBytes)
 	}

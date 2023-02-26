@@ -1,4 +1,4 @@
-package operations
+package utils
 
 func Equal(a, b []byte) bool {
 	if len(b) != len(a) {
