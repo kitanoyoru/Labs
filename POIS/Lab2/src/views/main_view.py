@@ -1,5 +1,6 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 
+from src.components import Table, Bar
 
 class MainView(MDBoxLayout):
     def __init__(self, controller, *args, **kwargs) -> None:
@@ -18,15 +19,18 @@ class MainView(MDBoxLayout):
         self.table = Table(self.controller)
         self.root.add_widget(self.table)
 
-    def open_student_adding_dialog(self):
+    def show_student_adding_dialog(self) -> None:
         self.dialog = AddStudentDialog(self.controller)
         self.dialog.open()
 
-    def open_student_filter_dialog(self):
+    def show_student_filter_dialog(self) -> None:
         self.dialog = FilterStudentDialog(self.controller)
         self.dialog.open()
 
-    def close_dialog(self):
+    def open_student_delete_dialog(self) -> None:
+        pass
+
+    def close_dialog(self) -> None:
         self.dialog.dismiss(force=True)
 
     

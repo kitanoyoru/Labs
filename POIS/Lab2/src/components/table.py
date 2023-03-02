@@ -18,11 +18,9 @@ class Table:
                 column_data=[
                     ("Full name", dp(60)),
                     ("Group No", dp(30)),
-                    ("Address", dp(60)),
-                    ("Landline phone", dp(30)),
-                    ("Mobile phone", dp(30)),
+                    ("Exams", dp(150)),
                 ],
-                row_data=props['controller'].get_customers()
+                row_data=self.controller.get_strudents_info()
             ),
             id='table_box',
         )
