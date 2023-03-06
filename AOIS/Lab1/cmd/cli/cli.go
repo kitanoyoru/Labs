@@ -31,9 +31,9 @@ func ForFloat(first, second float32, log *logrus.Logger) {
 	log.Infof("First:  %v\n", float.ToBinary(float32(first)))
 	log.Infof("Second: %v\n\n", float.ToBinary(float32(second)))
 
-	log.Infof("X + Y   = %v\n", float.Sum(first, second))
-	log.Infof("X - Y   = %v\n", float.Sum(first, -second))
-	log.Infof("- X + Y = %v\n", float.Sum(-first, second))
-	log.Infof("- X - Y = %v\n\n", float.Sum(-first, -second))
+	log.Infof("X + Y   = %v\n", float.FromBinary(float.Sum(first, second)))
+	log.Infof("X - Y   = %v\n", float.FromBinary(float.Sum(first, -second)))
+	log.Infof("- X + Y = %v\n", float.FromBinary(float.Sum(-first, second)))
+	log.Infof("- X - Y = %v\n\n", float.FromBinary(float.Sum(-first, -second)))
 
 }

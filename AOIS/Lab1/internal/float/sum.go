@@ -16,14 +16,9 @@ func Sum(a, b float32) []byte {
 		x, y = y, x
 	}
 
-	usignedMantissaX := x[9:]
-	for i := 0; i < 9; i++ {
-		usignedMantissaX = append([]byte{0}, usignedMantissaX...)
-	}
-
 	for utils.NotEqual(x[1:9], y[1:9]) {
 		copy(x[1:9], raw.RawSum(x[1:9], constants.MinusOne8InBytes))
-		copy(x[9:], operations.RawMul(usignedMantissaX, code.GetStraightCode(10), false)[9:])
+		copy(x[9:], operations.RawMul(x[9:], code.GetStraightCode(10)[9:], false))
 	}
 
 	signedMantissaX := append([]byte{x[0]}, x[9:]...)
