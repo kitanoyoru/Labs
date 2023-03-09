@@ -21,7 +21,7 @@ func Div(a, b int) []byte {
 	res := constants.Zero32InBytes
 	for utils.GreaterOrEqual(x, y) {
 		y[0] = 1
-		x = raw.RawSum(x, code.Straight2Additional(y))
+		x = raw.RawSum(x, code.Straight2Additional(y, 32))
 		res = raw.RawSum(res, constants.One32InBytes)
 		y[0] = 0
 	}

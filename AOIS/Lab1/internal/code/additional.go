@@ -8,7 +8,7 @@ import (
 
 func GetAdditionalCode(x int) []byte {
 	ans := utils.FormatBitsWithBaseTwo(uint32(x), x < 0)
-	return Straight2Additional(ans)
+	return Straight2Additional(ans, 32)
 }
 
 func Addition2Reverse(bytes []byte) []byte {
