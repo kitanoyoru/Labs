@@ -12,3 +12,7 @@ class DialogAction(Enum):
     OPEN_ADD_DIALOG = 2
     OPEN_DELETE_DIALOG = 3
     CLOSE_DIALOG = 4
+
+
+class TableAction(Enum):
+    LATEST = 1

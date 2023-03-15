@@ -45,10 +45,12 @@ class AddStudentDialog:
                 MDFlatButton(
                     text="CANCEL",
                     theme_text_color="Custom",
-                    on_release=self._close_dialog,
+                    on_release=lambda event: self._close_dialog(),
                 ),
                 MDFlatButton(
-                    text="ADD", theme_text_color="Custom", on_release=self._add_student
+                    text="ADD", 
+                    theme_text_color="Custom", 
+                    on_release=lambda event: self._add_student()
                 ),
             ],
         )

@@ -12,18 +12,16 @@ from src.controllers import RootController
 
 
 class RootView(MDBoxLayout):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, controller, *args, **kwargs) -> None:
         super().__init__(args, kwargs)
 
         self.dialog = None
+        self.controller = controller
 
         self.bar = Bar(self.controller).build_widget()
         self.table = Table(self.controller).build_widget()
 
         self.root = MDBoxLayout(self.bar, self.table, id="root", orientation="vertical")
-
-    def link_controller(self, controller: RootController) -> None:
-        self.controller = controller
 
     def update(self) -> None:
         self.root.remove_widget(self.table)

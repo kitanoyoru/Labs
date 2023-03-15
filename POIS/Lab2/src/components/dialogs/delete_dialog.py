@@ -32,12 +32,12 @@ class DeleteStudentDialog:
                 MDFlatButton(
                     text="CANCEL",
                     theme_text_color="Custom",
-                    on_release=self._close_dialog,
+                    on_release=lambda event: self._close_dialog(),
                 ),
                 MDFlatButton(
                     text="DELETE",
                     theme_text_color="Custom",
-                    on_release=self._delete_student,
+                    on_release=lambda event: self._delete_student(),
                 ),
             ],
         )

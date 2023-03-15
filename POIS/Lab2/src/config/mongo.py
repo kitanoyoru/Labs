@@ -5,7 +5,7 @@ __STUDENTS_COLLECTION__ = "students"
 
 
 @dataclass
-class StorageConfig:
-    Url: str
+class MongoConfig:
+    url: str
 
     StudentsCollection: str = field(default=__STUDENTS_COLLECTION__, init=False)

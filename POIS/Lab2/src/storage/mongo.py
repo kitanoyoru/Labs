@@ -1,13 +1,13 @@
 from pymongo import MongoClient
 
-from src.config.storage import StorageConfig
-from src.repositories import StudentRepository
+from src.config.mongo import MongoConfig
+from src.repositories import StudentsRepository
 
 
 class MongoStorage:
-    def __init__(self, config: StorageConfig) -> None:
-        self._client: MongoClient = MongoClient(config.Url)
+    def __init__(self, config: MongoConfig) -> None:
+        self._client: MongoClient = MongoClient(config.url)
         self._db = self._client.get_database(config.StudentsCollection)
 
         self._studentsCollection = self._db.get_collection(config.StudentsCollection)
-        self.handleStudents = StudentRepository(self._studentsCollection)
+        self.handleStudents = StudentsRepository(self._studentsCollection)

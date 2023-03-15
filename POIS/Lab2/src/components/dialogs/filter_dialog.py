@@ -50,18 +50,18 @@ class FilterStudentDialog:
                 orientation="vertical",
                 spacing="15dp",
                 size_hint_y=None,
-                height="370dp",
+                height="475dp",
             ),
             buttons=[
                 MDFlatButton(
                     text="CANCEL",
                     theme_text_color="Custom",
-                    on_release=self._close_dialog,
+                    on_release=lambda event: self._close_dialog(),
                 ),
                 MDFlatButton(
                     text="FILTER",
                     theme_text_color="Custom",
-                    on_release=self._filter_student,
+                    on_release=lambda event: self._filter_student(),
                 ),
             ],
         )

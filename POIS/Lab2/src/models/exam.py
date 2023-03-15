@@ -3,7 +3,7 @@ from pydantic import BaseModel, validator
 from typing import List, Union, Optional
 
 
-class Lesson(BaseModel):
+class Exam(BaseModel):
     name: str
     max_score: float
     min_score: float
@@ -15,22 +15,22 @@ class Lesson(BaseModel):
         return abs(value)
 
     @classmethod
-    def from_text(cls, data: str) -> List["Lesson"]:
+    def from_text(cls, data: str) -> List["Exam"]:
         """
         math 3 10 | rus 5 8 | eng 1 10
         """
-        raw_lessons = [x.strip().split(" ") for x in data.split("|")]
-        lessons = list()
+        exams = list()
+        raw_exams = [x.strip().split(" ") for x in data.split("|")]
 
-        for args in raw_lessons:
+        for args in raw_exams:
             name, max_score, min_score = args[0], float(args[1]), float(args[2])
             avg_score = (max_score + min_score) / 2
-            lesson = cls(
+            exam = cls(
                 name=name, max_score=max_score, min_score=min_score, avg_score=avg_score
             )
-            lessons.append(lesson)
+            exams.append(exam)
 
-        return lessons
+        return exams
 
     def __str__(self) -> str:
         return f"{self.name} {self.max_score} {self.min_score} {self.avg_score}"
