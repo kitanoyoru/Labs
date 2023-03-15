@@ -11,11 +11,13 @@ python = "^3.8.1"
 kivy = "^2.1.0"
 kivymd = "^1.1.1"
 pymongo = "^4.3.3"
+pydantic = "^1.10.6"
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
 flake8 = "^6.0.0"
+mypy = "^1.1.1"
 
 [build-system]
 requires = ["poetry-core"]

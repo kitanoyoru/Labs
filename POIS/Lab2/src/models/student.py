@@ -1,33 +1,20 @@
-from enum import Enum
-from typing import List, Dict, Any
+from typing import List, Tuple, Any
 
-from .lesson import Lesson
+from pydantic import BaseModel, validator
 
-
-class StudentFields(Enum):
-    NAME = "name"
-    GROUP = "group"
-    LESSONS = "lessons"
+from src.models.lesson import Lesson
 
 
-class Student:
-    def __init__(self, name: str, group: str, lessons: List[Lesson]) -> None:
-        self._name = name
-        self._group = group
-        self._lessons = lessons
+class StudentModel(BaseModel):
+    name: str
+    group: str
+    lessons: List[Lesson]
 
-    def to_dict(self) -> Dict[str, Any]:
-        d = dict()
-
-        d[StudentFields.NAME.value] = self._name
-        d[StudentFields.GROUP.value] = self._group
-        d[StudentFields.LESSONS.value] = [lesson.to_dict() for lesson in self._lessons]
-
-        return d
-
-    def from_dict(self, d: Dict[str, Any]) -> None:
-        self._name = d[StudentFields.NAME.value]
-        self._group = d[StudentFields.GROUP.value]
-        self._lessons = [lesson.from_dict() for lesson in d[StudentFields.LESSONS.value]]
-
-
+    def to_table_row(self) -> Tuple[Any, ...]:
+        return (
+            self.name,
+            self.group,
+            str(self.lessons[0]),
+            str(self.lessons[1]),
+            str(self.lessons[2]),
+        )

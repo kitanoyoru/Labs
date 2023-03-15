@@ -1,34 +1,36 @@
-from enum import Enum
-from typing import Dict, Any
+from pydantic import BaseModel, validator
+
+from typing import List, Union, Optional
 
 
-class LessonFields(Enum):
-    NAME = "name"
-    MIN = "min"
-    MAX = "max"
-    AVG = "avg"
+class Lesson(BaseModel):
+    name: str
+    max_score: float
+    min_score: float
+    avg_score: float
 
+    @validator("max_score", "min_score", pre=True)
+    def validate_max_score(cls, value: Union[str, float]) -> float:
+        value = float(value) if isinstance(value, str) else value
+        return abs(value)
 
-class Lesson:
-    def __init__(self, name: str, min: float, max: float) -> None:
-        self._name = name
-        self._min = min
-        self._max = max
+    @classmethod
+    def from_text(cls, data: str) -> List["Lesson"]:
+        """
+        math 3 10 | rus 5 8 | eng 1 10
+        """
+        raw_lessons = [x.strip().split(" ") for x in data.split("|")]
+        lessons = list()
 
-    def to_dict(self) -> Dict[str, Any]:
-        d = dict()
+        for args in raw_lessons:
+            name, max_score, min_score = args[0], float(args[1]), float(args[2])
+            avg_score = (max_score + min_score) / 2
+            lesson = cls(
+                name=name, max_score=max_score, min_score=min_score, avg_score=avg_score
+            )
+            lessons.append(lesson)
 
-        d[LessonFields.NAME.value] = self._name
-        d[LessonFields.MIN.value] = self._min
-        d[LessonFields.MAX.value] = self._max
-        d[LessonFields.AVG.value] = self._find_avg_score()
+        return lessons
 
-        return d
-
-    def from_dict(self, d: Dict[str, Any]) -> None:
-        self._name = d[LessonFields.NAME.value]
-        self._min = d[LessonFields.MIN.value]
-        self._max = d[LessonFields.MAX.value]
-
-    def _find_avg_score(self) -> float:
-        return (self._max + self._min) / 2
+    def __str__(self) -> str:
+        return f"{self.name} {self.max_score} {self.min_score} {self.avg_score}"

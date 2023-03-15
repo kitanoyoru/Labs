@@ -1,1 +1,1 @@
-from .students_repository import StudentRepository
+from .student import StudentRepository
