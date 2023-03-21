@@ -1,0 +1,18 @@
+[package]
+name = "Lab2"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+indexmap = "1.9.2"
+
+
+[lib]
+name = "libtruthtable"
+path = "src/lib.rs"
+
+[[bin]]
+name = "truth_table"
+path = "src/main.rs"
