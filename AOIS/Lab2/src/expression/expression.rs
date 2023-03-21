@@ -1,7 +1,6 @@
+use crate::parsing::parsing::Parsing;
+use crate::vars::vars::VarValues;
 use crate::expression::functions::{and, or, implication, biconditional, not};
-
-use super::super::vars::vars::VarValues; // REFACTOR
-
 
 pub enum BinaryOperationTypes {
     And,
@@ -18,6 +17,20 @@ pub enum Expression {
     Variable(String),
     BinaryOperation(BinaryOperationTypes, Box<Expression>, Box<Expression>),
     UnaryOperation(UnaryOperationTypes, Box<Expression>)
+}
+
+impl From<&Parsing> for Expression {
+    fn from(value: &Parsing) -> Self {
+        match value {
+            Parsing::String(s) => Expression::Variable(s.clone()),
+            Parsing::SubList(l) => {
+                match l.len() {
+                    1 => Expression::from(&l[0]),
+                    2 => Express 
+                }
+            }            
+        }
+    }
 }
 
 impl Expression {

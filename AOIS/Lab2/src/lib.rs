@@ -1,7 +1,7 @@
 mod expression;
 mod vars;
 
-mod parse;
+mod parsing;
 mod check_validity;
 
 mod display;
@@ -14,7 +14,7 @@ pub fn get_table(expresion: &str) {
         UnexpectedSymbol(i, ch) => ()
     }
 
-    let (expr, var_val) = parse::parse(expression);
+    let (expr, var_val) = parsing::parse(expression);
 
     display::display(expression, &expr, &var_val)
 }
