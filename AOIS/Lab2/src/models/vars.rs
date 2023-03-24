@@ -19,7 +19,7 @@ impl VarValues {
 
     pub fn names(&self) -> impl Iterator<Item = &String> {
         self.0.keys()
-    } 
+    }
 
     pub fn values(&self) -> Vec<bool> {
         self.0.values().copied().collect()

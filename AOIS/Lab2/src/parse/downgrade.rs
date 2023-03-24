@@ -1,12 +1,15 @@
-use std::ops::{RangeBounds, Bound};
+use std::ops::{Bound, RangeBounds};
 
 use super::parsing::Parsing;
 
-fn downgrade<R>(range: R, parsing: &mut Vec<Parsing>) where R: RangeBounds<usize> {
+fn downgrade<R>(range: R, parsing: &mut Vec<Parsing>)
+where
+    R: RangeBounds<usize>,
+{
     let index = match range.start_bound() {
         Bound::Included(t) => *t,
         Bound::Unbounded => 0,
-        _ => panic!("foo")
+        _ => panic!("foo"),
     };
 
     let sub: Vec<Parsing> = parsing.drain(range).collect();
@@ -39,10 +42,10 @@ pub fn downgrade_braces(parsing: &mut Vec<Parsing>) {
 
         let (first, last) = (maybe_open.unwrap(), maybe_close.unwrap());
 
-        downgrade(first+1..last, parsing);
+        downgrade(first + 1..last, parsing);
 
         parsing.remove(first);
-        parsing.remove(first+1);
+        parsing.remove(first + 1);
     }
 }
 
@@ -66,11 +69,11 @@ pub fn downgrade_unary_not(parsing: &mut Vec<Parsing>) {
             }
 
             if !obliterated {
-                downgrade(index..index+2, parsing);
+                downgrade(index..index + 2, parsing);
             }
         } else {
-            break
-        }            
+            break;
+        }
     }
 }
 
@@ -93,17 +96,16 @@ pub fn downgrade_biconditional(parsing: &mut Vec<Parsing>) {
 fn downgrade_binary(op: &str, parsing: &mut Vec<Parsing>) {
     for sub in parsing.iter_mut() {
         if let Parsing::SubList(s) = sub {
-            downgrade_binary(op, parsing);
+            downgrade_binary(op, s);
         }
     }
 
     loop {
         let maybe_index = parsing.iter().position(|x| x.string_eq(op));
         if let Some(index) = maybe_index {
-            downgrade(index-1..index+2, parsing);
+            downgrade(index - 1..index + 2, parsing);
         } else {
             break;
         }
     }
-
 }

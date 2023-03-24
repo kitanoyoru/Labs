@@ -1,3 +1,6 @@
+use libtruthtable::result;
+
 fn main() {
-    println!("Hello, world!");
+    let expr1 = "((p => !q) & r) <=> (!r => q)";
+    result(expr1);
 }

@@ -1,4 +1,3 @@
-
 // Binary operations
 
 pub fn and(left: bool, right: bool) -> bool {
