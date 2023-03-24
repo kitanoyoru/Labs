@@ -16,25 +16,12 @@ pub fn result(expression: &str) {
         Ok => (),
         Unexpected(i, ch) => {
             let init_msg = format!("unexpected '{}' in \"", ch);
-            let init_spaces = init_msg.len() + i;
-
             println!("{}{}\" at index {}", init_msg, expression, i);
-
-            for _ in 0..init_spaces {
-                print!(" ")
-            }
-            println!("^");
             return;
         }
         ExpectedAtEnd(s) => {
             let init_msg = format!("expected {} at end of \"{}", s, expression);
-
             println!("{}\"", init_msg);
-
-            for _ in 0..init_msg.len() {
-                print!(" ");
-            }
-            println!("^");
             return;
         }
         Msg(s) => {
@@ -142,9 +129,23 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
         });
 
     println!("PCNF: {}", pcnf);
-    println!("Binary PCNF: {:?}\n", binary_pcnf);
+    let mut iter = binary_pcnf.chunks(3);
+    let mut binary = vec![];
+    while let Some(x) = iter.next() {
+        binary.push(x)
+    }
+    println!(
+        "Binary PCNF: {:?}, In decimal: {:?}\n",
+        binary,
+        binary
+            .clone()
+            .into_iter()
+            .map(|item| item.into_iter().fold(0, |acc, digit| (acc << 1) + digit))
+            .collect::<Vec<u8>>()
+    );
 
     let pdnf = pdnf_values
+        .clone()
         .into_iter()
         .fold(vec![], |mut acc, item| {
             let n = item.len();
@@ -156,7 +157,7 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
                 if value {
                     word.push_str(letter.as_str());
                 } else {
-                    word.push_str(letter.as_str());
+                    word.push_str(format!("!{}", letter.as_str()).as_str());
                 }
                 if i == n - 1 {
                     word.push_str(")")
@@ -170,7 +171,7 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
             acc
         })
         .join("&");
-    let binary_pdnf = pcnf_values
+    let binary_pdnf = pdnf_values
         .clone()
         .into_iter()
         .fold(vec![], |mut acc, item| {
@@ -183,8 +184,24 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
         });
 
     println!("PDNF: {}", pdnf);
-    println!("Binary PDNF: {:?}\n", binary_pdnf);
+    let mut iter = binary_pdnf.chunks(3);
+    let mut binary = vec![];
+    while let Some(x) = iter.next() {
+        binary.push(x)
+    }
+    println!(
+        "Binary PDNF: {:?}, In decimal: {:?}\n",
+        binary,
+        binary
+            .clone()
+            .into_iter()
+            .map(|item| item.into_iter().fold(0, |acc, digit| (acc << 1) + digit))
+            .collect::<Vec<u8>>()
+    );
 
-    let index = results.into_iter().fold(0, |acc, digit| (acc << 1) + digit);
+    let index = results
+        .into_iter()
+        .rev()
+        .fold(0, |acc, digit| (acc << 1) + digit);
     println!("Index: {}", index)
 }

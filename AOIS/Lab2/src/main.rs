@@ -1,6 +1,6 @@
 use libtruthtable::result;
 
 fn main() {
-    let expr1 = "((p => !q) & r) <=> (!r => q)";
-    result(expr1);
+    let expr = "((p => !q) & r) | (!r => q)";
+    result(expr);
 }
