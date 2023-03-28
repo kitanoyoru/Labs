@@ -11,6 +11,8 @@ from src.models.asteroid import Asteroid
 from src.models.missile import Missile
 from src.models.spaceship import Spaceship
 
+from src.repository import StateRepository
+
 from src.utils import load_sound, load_image_convert_alpha, distance, draw_centered
 
 
@@ -29,13 +31,13 @@ class EventType(Enum):
 
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, repository: StateRepository) -> None:
         pygame.mixer.init()
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.init()
 
-        self.width = 800
-        self.height = 600
+        self.width = 1280
+        self.height = 720
         self.screen = pygame.display.set_mode((self.width, self.height))
 
         self.bg_color = 0, 0, 0
@@ -50,6 +52,8 @@ class Game:
         self.big_font = pygame.font.SysFont(None, 100)
         self.medium_font = pygame.font.SysFont(None, 50)
         self.small_font = pygame.font.SysFont(None, 25)
+
+        self.repository = repository
 
         self.gameover_text = self.big_font.render("GAME OVER", True, (255, 0, 0))
 
@@ -66,10 +70,15 @@ class Game:
 
     def do_welcome(self) -> None:
         self.state = GameState.WELCOME
+        
+        score = 0
+        state = self.repository.read_last_record()
+        if state is not None:
+            score = state["score"]
 
         self.welcome_asteroids = self.big_font.render("Asteroids", True, (255, 215, 0))
         self.welcome_desc = self.medium_font.render(
-            "[Click anywhere/press Enter] to begin!", True, (35, 107, 142)
+            f"[Click anywhere/press Enter] to begin! You're last record was {score}", True, (35, 107, 142)
         )
 
     def do_init(self) -> None:
@@ -198,6 +207,8 @@ class Game:
 
         self.state = GameState.GAME_OVER
         self.gameover_sound.play()
+
+        self.repository.save_record(record={"record": self.score})
 
         delay = int((self.gameover_sound.get_length() + 1) * 1000)
         pygame.time.set_timer(EventType.RESTART.value, delay)
