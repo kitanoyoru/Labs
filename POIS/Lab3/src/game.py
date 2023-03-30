@@ -28,7 +28,55 @@ class EventType(Enum):
     REFRESH = pygame.USEREVENT
     START = pygame.USEREVENT + 1
     RESTART = pygame.USEREVENT + 2
+    
+class Button():
+    def __init__(self, x, y, width, height, font, buttonText='Button', onclickFunction=None, onePress=False):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.onclickFunction = onclickFunction
+        self.onePress = onePress
 
+        self.fillColors = {
+            'normal': '#ffffff',
+            'hover': '#666666',
+            'pressed': '#333333',
+        }
+
+        self.buttonSurface = pygame.Surface((self.width, self.height))
+        self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
+
+        self.buttonSurf = font.render(buttonText, True, (20, 20, 20))
+
+        self.alreadyPressed = False
+
+    def process(self, screen):
+
+        mousePos = pygame.mouse.get_pos()
+        
+        self.buttonSurface.fill(self.fillColors['normal'])
+        if self.buttonRect.collidepoint(mousePos):
+            self.buttonSurface.fill(self.fillColors['hover'])
+
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                self.buttonSurface.fill(self.fillColors['pressed'])
+
+                if self.onePress:
+                    self.onclickFunction()
+
+                elif not self.alreadyPressed:
+                    self.onclickFunction()
+                    self.alreadyPressed = True
+
+            else:
+                self.alreadyPressed = False
+
+        self.buttonSurface.blit(self.buttonSurf, [
+            self.buttonRect.width/2 - self.buttonSurf.get_rect().width/2,
+            self.buttonRect.height/2 - self.buttonSurf.get_rect().height/2
+        ])
+        screen.blit(self.buttonSurface, self.buttonRect)
 
 class Game:
     def __init__(self, repository: StateRepository) -> None:
@@ -72,14 +120,17 @@ class Game:
         self.state = GameState.WELCOME
         
         score = 0
-        state = self.repository.read_last_record()
+        state = self.repository.read_last_score()
         if state is not None:
-            score = state["score"]
+            score = state["record"]
 
         self.welcome_asteroids = self.big_font.render("Asteroids", True, (255, 215, 0))
         self.welcome_desc = self.medium_font.render(
-            f"[Click anywhere/press Enter] to begin! You're last record was {score}", True, (35, 107, 142)
+            f"You're last record was {score}", True, (35, 107, 142)
         )
+        
+        self.start_button = Button(450, 400, 400, 100, self.medium_font, buttonText="Start Game", onclickFunction=lambda _: pygame.time.set_timer(pygame.MOUSEBUTTONDOWN, 0))
+        self.quit_button = Button(450, 550, 400, 100, self.medium_font, buttonText="Quit", onclickFunction=lambda _: pygame.time.set_timer(pygame.QUIT, 0))
 
     def do_init(self) -> None:
         self.asteroids = []
@@ -208,7 +259,7 @@ class Game:
         self.state = GameState.GAME_OVER
         self.gameover_sound.play()
 
-        self.repository.save_record(record={"record": self.score})
+        self.repository.save_score(record={"record": self.score})
 
         delay = int((self.gameover_sound.get_length() + 1) * 1000)
         pygame.time.set_timer(EventType.RESTART.value, delay)
@@ -346,14 +397,17 @@ class Game:
                 self.screen,
                 (
                     self.width // 2,
-                    self.height // 2 - self.welcome_asteroids.get_height(),
+                    self.height // 2 - self.welcome_asteroids.get_height() - 100,
                 ),
             )
 
             draw_centered(
                 self.welcome_desc,
                 self.screen,
-                (self.width // 2, self.height // 2 + self.welcome_desc.get_height()),
+                (self.width // 2, self.height // 2 + self.welcome_desc.get_height() - 100),
             )
+
+            self.start_button.process(self.screen)
+            self.quit_button.process(self.screen)
 
         pygame.display.flip()
