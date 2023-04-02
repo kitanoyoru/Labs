@@ -1,4 +1,5 @@
 import math
+import sys
 import random
 import datetime
 
@@ -129,8 +130,8 @@ class Game:
             f"You're last record was {score}", True, (35, 107, 142)
         )
         
-        self.start_button = Button(450, 400, 400, 100, self.medium_font, buttonText="Start Game", onclickFunction=lambda _: pygame.time.set_timer(pygame.MOUSEBUTTONDOWN, 0))
-        self.quit_button = Button(450, 550, 400, 100, self.medium_font, buttonText="Quit", onclickFunction=lambda _: pygame.time.set_timer(pygame.QUIT, 0))
+        self.start_button = Button(450, 400, 400, 100, self.medium_font, buttonText="Start Game", onclickFunction=lambda: self.do_init())
+        self.quit_button = Button(450, 550, 400, 100, self.medium_font, buttonText="Quit", onclickFunction=lambda: sys.exit(1))
 
     def do_init(self) -> None:
         self.asteroids = []
@@ -238,10 +239,6 @@ class Game:
             elif event.type == EventType.RESTART.value:
                 pygame.time.set_timer(EventType.RESTART.value, 0)
                 self.state = GameState.STARTING
-            elif event.type == pygame.MOUSEBUTTONDOWN and (
-                self.state == GameState.STARTING or self.state == GameState.WELCOME
-            ):
-                self.do_init()
             elif (
                 event.type == pygame.KEYDOWN
                 and event.key == pygame.K_RETURN
