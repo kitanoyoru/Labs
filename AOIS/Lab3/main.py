@@ -1,8 +1,9 @@
-from src import Table
+from src import Table, PCNF
 
 if __name__ == "__main__":
     table = Table("!((a|!b)&(a&!c))")
-    print()
-    for i in range(8):
-        row = table[i]
-        print(row.result)
+    pcnf = PCNF(table)
+
+    print(pcnf._pcnf)
+    print(pcnf._minimized_pcnf)
+    print(pcnf._calculated_pcnf)

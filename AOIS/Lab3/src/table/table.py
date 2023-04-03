@@ -1,8 +1,9 @@
-import src.table.constants as constants
-
+from functools import reduce
 from dataclasses import dataclass
 
 from typing import Optional, List, Any
+
+import src.table.constants as constants
 
 
 @dataclass
@@ -14,7 +15,7 @@ class BoolVar:
         return hash(self.value)
 
     def __eq__(self, __other: object) -> bool:
-        if isinstance(__other, self):
+        if isinstance(__other, BoolVar):
             is_equals = self.value == __other.value
             return is_equals
 
@@ -26,10 +27,14 @@ class Row:
     a: Optional[BoolVar]
     b: Optional[BoolVar]
     c: Optional[BoolVar]
+    result: Optional[BoolVar] = None
 
     def __getitem__(self, __key: str) -> BoolVar:
         val = getattr(self, __key)
         return val
+
+    def __setitem__(self, __key: str, __value: BoolVar) -> None:
+        setattr(self, __key, __value)
 
     def __eq__(self, __other: object) -> bool:
         if isinstance(__other, self):
@@ -43,7 +48,10 @@ class Row:
     def __hash__(self) -> int:
         return hash((self.a, self.b, self.c))
 
-    result: Optional[BoolVar] = None
+    def has_none_field(self) -> bool:
+        accumulator = lambda acc, val: acc + int(val is None)
+        acc = reduce(accumulator, [getattr(self, key) for key in ["a", "b", "c"]])
+        return acc == 1
 
 
 class Table:
@@ -64,11 +72,12 @@ class Table:
 
     def _fill_table_with_result(self, formula: str, table: List[Row]) -> None:
         for i in range(constants.TABLE_ROWS):
-            table[i].result = self._get_result(formula, table[i])
+            table[i].result = Table._get_result(formula, table[i])
 
-    def _get_result(self, formula: str, row: Row) -> BoolVar:
+    @classmethod
+    def _get_result(cls, formula: str, row: Row) -> BoolVar:
         stack: List[int] = []
-        polish = self._polish_notation(formula, row)
+        polish = cls._polish_notation(formula, row)
 
         for char in polish:
             if char.isdigit():
@@ -92,11 +101,11 @@ class Table:
                 stack.append(handler(a, b))
 
         result = BoolVar(stack.pop())
-        print(result)
 
         return result
 
-    def _polish_notation(self, formula: str, row: Row) -> List[str]:
+    @classmethod
+    def _polish_notation(cls, formula: str, row: Row) -> List[str]:
         stack, result = [], []
 
         for char in ["a", "b", "c"]:
