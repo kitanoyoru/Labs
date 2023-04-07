@@ -1,9 +1,11 @@
 import copy
 
+import src.fomulas.constants as constants
+
 from typing import List
 
 from src.table import Table, Row, BoolVar
-from src.table.constants import TABLE_ROWS
+from src.fomulas.area import Area
 
 
 class PCNF:
@@ -14,8 +16,8 @@ class PCNF:
         self._minimized_pcnf = self._generate_minimized_pcnf()
 
         self._calculated_pcnf = self.generate_irredundant_calculated_pcnf()
-        #self._quine_mcclusky_pcnf = self._generate_irredundant_quine_mcclusky_pcnf()
-        #self._karnaugh_veitch_pcnf = self._generate_irredundant_karnaugh_veitch_pcnf()
+        self._quine_mcclusky_pcnf = self.generate_irredundant_quine_mcclusky_pcnf()
+        self._karnaugh_veitch_pcnf = self.generate_irredundant_karnaugh_veitch_pcnf()
 
     def _generate_pcnf(self) -> str:
         pcnf = ""
@@ -52,13 +54,10 @@ class PCNF:
 
         return result
 
-    def _generate_minimized_pcnf(self) -> str:
-        pcnf_table = self._generate_pcnf_table()
-        pcnf_short_table = self._generate_short_pcnf_table(pcnf_table)
-
+    def _generate_minimized_pcnf_form(self, table: List[Row]) -> str:
         minimized_pcnf = ""
 
-        for row in pcnf_short_table:
+        for row in table:
             if minimized_pcnf != "":
                 minimized_pcnf += "&"
 
@@ -72,11 +71,19 @@ class PCNF:
 
         return minimized_pcnf
 
+    def _generate_minimized_pcnf(self) -> str:
+        pcnf_table = self._generate_pcnf_table()
+        pcnf_short_table = self._generate_short_pcnf_table(pcnf_table)
+        minimized_pcnf = self._generate_minimized_pcnf_form(pcnf_short_table)
+
+        return minimized_pcnf
+
+
     def generate_irredundant_calculated_pcnf(self) -> str:
         #if self.__is_constant_function():
         #    return 0
             
-        sign = "|"
+        sign = "&"
         short_form = self._minimized_pcnf
 
         pcnf_table = self._generate_pcnf_table()
@@ -96,6 +103,83 @@ class PCNF:
         joined_terms = sign.join(terms).strip(sign)
             
         return joined_terms
+
+    def generate_irredundant_quine_mcclusky_pcnf(self) -> str:
+        sign = "&"
+        short_form = self._minimized_pcnf.split(sign)
+        formula = self._pcnf.split(sign)
+
+        if len(short_form) == 1:
+            return "".join(short_form)
+
+        terms = []
+
+        for i in short_form:
+            if len(i) <= 4:
+                terms.append(i)
+
+        table = self.__fill_irredundant_quine_mcclusky_pcnf(formula, short_form)
+        for term1 in formula:
+            ones = list(table[term1]).count(1)
+            if ones == 1:
+                for term2 in short_form:
+                    if table[term1][term2] == 1 and term2 not in terms:
+                        terms.append(term2)
+
+        return sign.join(terms)
+
+
+    def __fill_irredundant_quine_mcclusky_pcnf(self, formula, short_form) -> str:
+        sign = "|"
+        table = {}
+
+        for col in formula:
+            table[col] = {}
+
+        for col in formula:
+            for row in short_form:
+                if len(row[1:-1]) > 2 and self.__is_row_includes_col(row[1:-1].split(sign), col[1:-1].split(sign)):
+                    table[col][row] = 1
+                else:
+                    table[col][row] = 0
+
+        return table
+
+    def generate_irredundant_karnaugh_veitch_pcnf(self) -> str:
+        sign, value = "&", 0
+        short_form = self._minimized_pcnf.split(sign)
+
+        if len(short_form) == 1:
+            return "".join(short_form)
+
+        result, table = [], self._fill_karnaugh_veitch_table()
+        
+        alg = Area(table=table).check_four_area_line(value).check_square_area(value).check_two_area_line(value).check_one_area(value).minimizing_area()
+
+        areas = [Row(*area) for area in alg.areas]
+
+        for area in areas:
+            result.extend(self._generate_short_pcnf_table(area))
+
+        return self._generate_minimized_pcnf_form(result) 
+
+    def _fill_karnaugh_veitch_table(self):
+        table = self._generate_pcnf_table()
+        dict_table = {col: {} for col in constants.VALUES_A}
+
+        for col in constants.VALUES_A:
+            for row in constants.VALUES_B_C:
+                if [col, row[0], row[1]] in table:
+                    dict_table[row][col] = 1
+                else:
+                    dict_table[row][col] = 0
+
+        return dict_table
+
+    
+    def __is_row_includes_col(row, col) -> bool:
+        return len(list(filter(lambda row_term: row_term in col, row))) > 0
+
             
     def __is_constant_function(self) -> bool:
         return len(list(filter(lambda row: row.result != BoolVar(0), self._table))) > 0

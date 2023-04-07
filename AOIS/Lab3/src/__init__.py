@@ -1,2 +1,2 @@
 from src.table import Table
-from src.pcnf import PCNF
+from src.fomulas import PCNF, PDNF

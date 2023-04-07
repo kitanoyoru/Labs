@@ -1,7 +1,7 @@
 from functools import reduce
 from dataclasses import dataclass
 
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Union
 
 import src.table.constants as constants
 
@@ -15,11 +15,15 @@ class BoolVar:
         return hash(self.value)
 
     def __eq__(self, __other: object) -> bool:
+        is_equals = False
+
         if isinstance(__other, BoolVar):
             is_equals = self.value == __other.value
-            return is_equals
+        elif isinstance(__other, int):
+            is_equals = self.value == __other
 
-        raise ValueError()
+        return is_equals
+
             
 # REFACTOR: maybe rafactor it using __slots__
 @dataclass
@@ -29,21 +33,30 @@ class Row:
     c: Optional[BoolVar]
     result: Optional[BoolVar] = None
 
-    def __getitem__(self, __key: str) -> BoolVar:
-        val = getattr(self, __key)
+    def __getitem__(self, __key: Union[str, int]) -> Optional[BoolVar]:
+        val = None
+
+        if isinstance(__key, str):
+            val = getattr(self, __key)
+        elif isinstance(__key, int):
+            val = getattr(self, chr(97 + __key))
+        
         return val
 
     def __setitem__(self, __key: str, __value: BoolVar) -> None:
         setattr(self, __key, __value)
 
     def __eq__(self, __other: object) -> bool:
-        if isinstance(__other, self):
+        if isinstance(__other, Row):
             for key in ["a", "b", "c"]:
                 if self[key] != __other[key]:
                     return False
             return True
 
         raise ValueError()
+
+    def __len__(self) -> int:
+        return 3
 
     def __hash__(self) -> int:
         return hash((self.a, self.b, self.c))
