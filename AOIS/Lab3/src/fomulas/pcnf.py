@@ -21,7 +21,7 @@ class PCNF:
 
     def _generate_pcnf(self) -> str:
         pcnf = ""
-
+            
         for row in self._table:
             if row.result  == BoolVar(0):
                 if pcnf != "":
@@ -42,10 +42,10 @@ class PCNF:
     
     def _generate_short_pcnf_table(self, table: List[Row]) -> List[Row]:
         result = []
-        if not len(table):
+        if len(table) == 0:
             return []
 
-        for _ in range(3):
+        for _ in range(len(table)):
             short_table = self.__start_glued(table)
             table = self.__delete_duplicate_rows(short_table)
             result = table
@@ -53,6 +53,13 @@ class PCNF:
         result = self.__delete_duplicate_rows(result)
 
         return result
+
+    def _generate_minimized_pcnf(self) -> str:
+        pcnf_table = self._generate_pcnf_table()
+        pcnf_short_table = self._generate_short_pcnf_table(pcnf_table)
+        minimized_pcnf = self._generate_minimized_pcnf_form(pcnf_short_table)
+
+        return minimized_pcnf
 
     def _generate_minimized_pcnf_form(self, table: List[Row]) -> str:
         minimized_pcnf = ""
@@ -65,19 +72,11 @@ class PCNF:
             for char in ["a", "b", "c"]:
                 var = row[char]
                 if var is not None:
-                    minimized_pcnf += f"{char}" if var.value == 0 else f"!{char}"
+                    minimized_pcnf += f"{char}" if var == 0 else f"!{char}"
                     minimized_pcnf += "|"
             minimized_pcnf = minimized_pcnf[:-1] + ")"
 
         return minimized_pcnf
-
-    def _generate_minimized_pcnf(self) -> str:
-        pcnf_table = self._generate_pcnf_table()
-        pcnf_short_table = self._generate_short_pcnf_table(pcnf_table)
-        minimized_pcnf = self._generate_minimized_pcnf_form(pcnf_short_table)
-
-        return minimized_pcnf
-
 
     def generate_irredundant_calculated_pcnf(self) -> str:
         #if self.__is_constant_function():
@@ -130,7 +129,7 @@ class PCNF:
 
 
     def __fill_irredundant_quine_mcclusky_pcnf(self, formula, short_form) -> str:
-        sign = "|"
+        sign = "&"
         table = {}
 
         for col in formula:
@@ -145,6 +144,7 @@ class PCNF:
 
         return table
 
+    
     def generate_irredundant_karnaugh_veitch_pcnf(self) -> str:
         sign, value = "&", 0
         short_form = self._minimized_pcnf.split(sign)
@@ -153,10 +153,11 @@ class PCNF:
             return "".join(short_form)
 
         result, table = [], self._fill_karnaugh_veitch_table()
+
         
         alg = Area(table=table).check_four_area_line(value).check_square_area(value).check_two_area_line(value).check_one_area(value).minimizing_area()
 
-        areas = [Row(*area) for area in alg.areas]
+        areas = [[Row(*data) for data in area] for area in alg.areas]
 
         for area in areas:
             result.extend(self._generate_short_pcnf_table(area))
@@ -165,18 +166,17 @@ class PCNF:
 
     def _fill_karnaugh_veitch_table(self):
         table = self._generate_pcnf_table()
-        dict_table = {col: {} for col in constants.VALUES_A}
+        dict_table = {row: {} for row in constants.VALUES_A}
 
-        for col in constants.VALUES_A:
-            for row in constants.VALUES_B_C:
-                if [col, row[0], row[1]] in table:
+        for row in constants.VALUES_A:
+            for col in constants.VALUES_B_C:
+                if Row(a=row, b=col[0], c=col[1]) in table:
                     dict_table[row][col] = 1
                 else:
                     dict_table[row][col] = 0
 
         return dict_table
 
-    
     def __is_row_includes_col(row, col) -> bool:
         return len(list(filter(lambda row_term: row_term in col, row))) > 0
 
@@ -224,7 +224,7 @@ class PCNF:
                     short_table.append(new_row)
 
             if not is_glued and i not in visited_idx:
-                short_table.append(table[i])
+                short_table.append(copy.deepcopy(table[i]))
 
         if len(short_table) == 0:
             return table
@@ -235,11 +235,20 @@ class PCNF:
         false_count: int = 0
         last_false_pos: int = 0
 
-        for key in ["a", "b", "c"]:
-            is_equal = (first[key].value == second[key].value)
-            if not is_equal:
+        
+        keys = ["a", "b", "c"]
+
+        for key in keys:
+            if first[key] is None and second[key] is None:
+                continue
+            elif first[key] is None or second[key] is None:
                 false_count += 1
                 last_false_pos = key
+            else:
+                is_equal = (first[key] == second[key])
+                if not is_equal:
+                    false_count += 1
+                    last_false_pos = key
         
         if false_count == 1:
             return last_false_pos 
