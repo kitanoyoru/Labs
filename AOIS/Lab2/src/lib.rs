@@ -91,14 +91,9 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
 
     display_pcnf(&pcnf_values, &var_values);
     
-    println!();
-    
     display_pdnf(&pdnf_values, &var_values);
 
-    println!();
-
     display_index(&results);
-
 }
 
 
