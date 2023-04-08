@@ -112,10 +112,10 @@ pub fn to_expression(parsing: &Parsing) -> Expression {
                         "|" => Expression::BinaryOperation(Or, left, right),
                         "=>" => Expression::BinaryOperation(Implication, left, right),
                         "<=>" => Expression::BinaryOperation(Biconditional, left, right),
-                        _ => panic!("foo"),
+                        _ => panic!("Unexpected operation"),
                     }
                 } else {
-                    unreachable!("foo");
+                    unreachable!("Some internal error while parsing expression");
                 }
             }
             _ => unreachable!("foo"),

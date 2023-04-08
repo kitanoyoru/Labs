@@ -89,6 +89,20 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
 
     println!();
 
+    display_pcnf(&pcnf_values, &var_values);
+    
+    println!();
+    
+    display_pdnf(&pdnf_values, &var_values);
+
+    println!();
+
+    display_index(&results);
+
+}
+
+
+fn display_pcnf(pcnf_values: &Vec<Vec<bool>>, var_values: &VarValues) {
     let pcnf = pcnf_values
         .clone()
         .into_iter()
@@ -116,6 +130,7 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
             acc
         })
         .join("|");
+
     let binary_pcnf = pcnf_values
         .clone()
         .into_iter()
@@ -129,6 +144,7 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
         });
 
     println!("PCNF: {}", pcnf);
+
     let mut iter = binary_pcnf.chunks(3);
     let mut binary = vec![];
     while let Some(x) = iter.next() {
@@ -144,6 +160,9 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
             .collect::<Vec<u8>>()
     );
 
+}
+
+fn display_pdnf(pdnf_values: &Vec<Vec<bool>>, var_values: &VarValues) {
     let pdnf = pdnf_values
         .clone()
         .into_iter()
@@ -199,9 +218,13 @@ fn display(original: &str, expression: &Expression, mut var_values: VarValues) {
             .collect::<Vec<u8>>()
     );
 
+}
+
+fn display_index(results: &Vec<u8>) {
     let index = results
         .into_iter()
         .rev()
         .fold(0, |acc, digit| (acc << 1) + digit);
-    println!("Index: {}", index)
+
+    println!("Index: {}", index);
 }

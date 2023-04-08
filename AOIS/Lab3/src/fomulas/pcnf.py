@@ -117,9 +117,9 @@ class PCNF:
             if len(i) <= 4:
                 terms.append(i)
 
-        table = self.__fill_irredundant_quine_mcclusky_pcnf(formula, short_form)
+        table = self.__fill_irredundant_quine_mcclusky_pcnf(formula=formula, short_form=short_form)
         for term1 in formula:
-            ones = list(table[term1]).count(1)
+            ones = list(table[term1].values()).count(1)
             if ones == 1:
                 for term2 in short_form:
                     if table[term1][term2] == 1 and term2 not in terms:
@@ -129,7 +129,7 @@ class PCNF:
 
 
     def __fill_irredundant_quine_mcclusky_pcnf(self, formula, short_form) -> str:
-        sign = "&"
+        sign = "|"
         table = {}
 
         for col in formula:
@@ -137,7 +137,9 @@ class PCNF:
 
         for col in formula:
             for row in short_form:
-                if len(row[1:-1]) > 2 and self.__is_row_includes_col(row[1:-1].split(sign), col[1:-1].split(sign)):
+                row_terms = row[1:-1].split(sign)
+                col_terms = col[1:-1].split(sign)
+                if len(row[1:-1]) > 2 and self.__is_row_includes_col(row_terms, col_terms):
                     table[col][row] = 1
                 else:
                     table[col][row] = 0
@@ -153,7 +155,6 @@ class PCNF:
             return "".join(short_form)
 
         result, table = [], self._fill_karnaugh_veitch_table()
-
         
         alg = Area(table=table).check_four_area_line(value).check_square_area(value).check_two_area_line(value).check_one_area(value).minimizing_area()
 
@@ -171,14 +172,14 @@ class PCNF:
         for row in constants.VALUES_A:
             for col in constants.VALUES_B_C:
                 if Row(a=row, b=col[0], c=col[1]) in table:
-                    dict_table[row][col] = 1
-                else:
                     dict_table[row][col] = 0
+                else:
+                    dict_table[row][col] = 1
 
         return dict_table
 
-    def __is_row_includes_col(row, col) -> bool:
-        return len(list(filter(lambda row_term: row_term in col, row))) > 0
+    def __is_row_includes_col(self, row, col) -> bool:
+        return all(filter(lambda row_term: row_term in col, row))
 
             
     def __is_constant_function(self) -> bool:
@@ -235,7 +236,6 @@ class PCNF:
         false_count: int = 0
         last_false_pos: int = 0
 
-        
         keys = ["a", "b", "c"]
 
         for key in keys:

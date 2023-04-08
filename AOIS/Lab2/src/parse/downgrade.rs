@@ -9,7 +9,7 @@ where
     let index = match range.start_bound() {
         Bound::Included(t) => *t,
         Bound::Unbounded => 0,
-        _ => panic!("foo"),
+        _ => panic!("Value does not includes into the range"),
     };
 
     let sub: Vec<Parsing> = parsing.drain(range).collect();

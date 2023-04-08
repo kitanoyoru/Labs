@@ -94,7 +94,7 @@ pub fn check_validity(expr: &str) -> Status {
     }
 
     match last {
-        ParenOpen => unreachable!("this case (last ParenOpen) should have been caught earlier"),
+        ParenOpen => unreachable!("Should ne caught earlier"),
         Operator(_) => Status::ExpectedAtEnd("expression".to_string()),
         _ => Status::Ok,
     }

@@ -1,7 +1,8 @@
 from src import Table, PCNF, PDNF
 
 if __name__ == "__main__":
-    table = Table("!((a|!b)&(a&!c))")
+    table = Table("(a|b)&c")
+
     pcnf = PCNF(table)
     pdnf = PDNF(table)
 

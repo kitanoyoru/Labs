@@ -29,7 +29,7 @@ class PDNF:
 
                 pdnf += "("
                 for char in ["a", "b", "c"]:
-                    pdnf += f"{char}&" if row[char].value == 1 else f"!{char}|"
+                    pdnf += f"{char}&" if row[char].value == 1 else f"!{char}&"
                 pdnf = pdnf[:-1] + ")"
 
         return pdnf
@@ -104,7 +104,7 @@ class PDNF:
         return joined_terms
 
     def generate_irredundant_quine_mcclusky_pdnf(self) -> str:
-        sign = "|"
+        sign = '|'
         short_form = self._minimized_pdnf.split(sign)
         formula = self._pdnf.split(sign)
 
@@ -119,7 +119,7 @@ class PDNF:
 
         table = self.__fill_irredundant_quine_mcclusky_pdnf(formula, short_form)
         for term1 in formula:
-            ones = list(table[term1]).count(1)
+            ones = list(table[term1].values()).count(1)
             if ones == 1:
                 for term2 in short_form:
                     if table[term1][term2] == 1 and term2 not in terms:
@@ -129,7 +129,7 @@ class PDNF:
 
 
     def __fill_irredundant_quine_mcclusky_pdnf(self, formula, short_form) -> str:
-        sign = "|"
+        sign = "&"
         table = {}
 
         for col in formula:
@@ -137,7 +137,9 @@ class PDNF:
 
         for col in formula:
             for row in short_form:
-                if len(row[1:-1]) > 2 and self.__is_row_includes_col(row[1:-1].split(sign), col[1:-1].split(sign)):
+                row_terms = row[1:-1].split(sign)
+                col_terms = col[1:-1].split(sign)
+                if len(row[1:-1]) > 2 and self.__is_row_includes_col(row_terms, col_terms):
                     table[col][row] = 1
                 else:
                     table[col][row] = 0
@@ -177,8 +179,8 @@ class PDNF:
 
         return dict_table
 
-    def __is_row_includes_col(row, col) -> bool:
-        return len(list(filter(lambda row_term: row_term in col, row))) > 0
+    def __is_row_includes_col(self, row, col) -> bool:
+        return all(map(lambda row_term: row_term in col, row))
 
             
     def __is_constant_function(self) -> bool:
