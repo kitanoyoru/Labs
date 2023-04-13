@@ -15,6 +15,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
+
 FROM base AS builder 
 
 RUN apt-get update \
@@ -23,24 +24,25 @@ RUN apt-get update \
         build-essential
 
 ENV POETRY_VERSION=1.0.5
-RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+RUN pip install "poetry==${POETRY_VERSION}" 
 
 WORKDIR $PYSETUP_PATH
-COPY ./poetry.lock ./pyproject.toml ./
+
+COPY ./pyproject.toml ./
+
 RUN poetry install --no-dev 
 
-FROM python-base as production
+
+FROM python:3.10.7-slim-bullseye as production
 ENV FLASK_ENV=production
 
 COPY --from=builder $VENV_PATH $VENV_PATH
 
-COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+COPY ./app /var/app
+COPY ./main.py /var/app
 
-COPY ./app /app
-COPY ./main.py /app
+COPY ./docker/entrypoint.sh /var/app
 
-WORKDIR /app
+WORKDIR /var/app
 
-ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD [ "python3", "main.py"]
+CMD ["./entrypoint.sh"]
