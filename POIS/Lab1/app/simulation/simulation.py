@@ -36,7 +36,7 @@ class Simulation:
                 sys.exit(0)
 
     def _read_state(self) -> dict:
-        path = os.getenv(ENV_STATE_FILE)
+        path = "/tmp/state.json" 
         if path is None:
             raise NotFoundPathErr() 
 

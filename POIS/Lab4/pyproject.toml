@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "lab4"
+version = "0.1.0"
+description = ""
+authors = ["kitanoyoru <kitanoyoru@protonmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+kivy = "^2.1.0"
+kivymd = "^1.1.1"
+pydantic = "^1.10.6"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+flake8 = "^6.0.0"
+mypy = "^1.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
