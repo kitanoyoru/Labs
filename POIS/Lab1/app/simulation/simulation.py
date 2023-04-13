@@ -46,7 +46,8 @@ class Simulation:
             fg = data.get(SimulationFields.FRUIT_GARDEN.value)
             self._fg = State.get_fruit_garden(fg)
         else:
-            seeds = [AppleSeed() for _ in range(self._n_plants)]
+            print(self._n_plants)
+            seeds = [AppleSeed() for _ in range(int(self._n_plants))]
             self._fg = FruitGarden(seeds=seeds)
 
     def _write_state(self) -> None:
