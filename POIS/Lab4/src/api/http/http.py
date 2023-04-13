@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 from requests.sessions import Session
@@ -9,17 +11,29 @@ class HttpFirstLabAPI:
         self._control_url = host + "/control"
         self._session = self.__init_session()
 
-    def send_drought_action(self) -> None:
-        data = {"action": 1}
-        self._session.post(self._control_url, data=data)
+    def send_drought_action(self) -> dict:
+        data = json.dumps({"action": 1})
+        headers={"Content-Type": "application/json"}
 
-    def send_irrigation_action(self) -> None:
-        data = {"action": 2}
-        self._session.post(self._control_url, data=data)
+        self._session.post(self._control_url, data=data, headers=headers)
+
+        return self.__get_latest()
+
+    def send_irrigation_action(self) -> dict:
+        data = json.dumps({"action": 2})
+        headers={"Content-Type": "application/json"}
+
+        self._session.post(self._control_url, data=data, headers=headers)
+
+        return self.__get_latest()
 
     def get_info(self) -> None:
+        return self.__get_latest()
+
+    def __get_latest(self) -> dict:
         response = self._session.get(self._control_url)
-        return response.json()
+        data = response.json()["message"]["fruit_garden"]
+        return data
 
     def __init_session(self, retries=3, backoff_factor=0.3, status_forcelist=(500, 502, 504), session=None,) -> Session:
         session = session or requests.Session()

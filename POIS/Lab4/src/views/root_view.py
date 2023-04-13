@@ -15,9 +15,9 @@ class RootView(MDBoxLayout):
         self._bar = Bar(self._controller).build_widget()
         self._table = Table(self._controller).build_widget()
 
-        self._root = MDBoxLayout(self.bar, self.table, id="root", orientation="vertical")
+        self.root = MDBoxLayout(self._bar, self._table, id="root", orientation="vertical")
 
     def update(self) -> None:
-        self._root.remove_widget(self._table)
+        self.root.remove_widget(self._table)
         self._table = Table(self._controller).build_widget()
-        self._root.add_widget(self._table)
+        self.root.add_widget(self._table)

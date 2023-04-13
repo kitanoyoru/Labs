@@ -1,10 +1,11 @@
 from pydantic.dataclasses import dataclass
 
+from src.models.seed import Seed
+
 
 @dataclass
 class Tree: 
     name: str
-    grow_speed: float
-    current_growth: float
+    seed: Seed
     is_growth: bool
-    is_wilt: bool
+    current_growth: float = 0.0

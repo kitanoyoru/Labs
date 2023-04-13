@@ -8,7 +8,7 @@ from src._settings import __ACCENT_PALLETE__, __COLORS__, __PRIMARY_PALLETE__
 from src.views import RootView
 from src.controllers import RootController
 
-from api.http import HttpFirstLabAPI
+from src.api.http import HttpFirstLabAPI
 
 
 class App(MDApp):

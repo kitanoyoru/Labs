@@ -18,6 +18,7 @@ class Table:
                 pagination_menu_height=330,
                 check=True,
                 column_data=[
+                    ("Type", dp(50)),
                     ("Name", dp(50)),
                     ("Current growth", dp(50))
                 ],

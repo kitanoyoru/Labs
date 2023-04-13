@@ -7,6 +7,5 @@ from src.models.tree import Tree
 class Fruit:
     name: str
     tree: Tree
-    current_growth: float
     is_growth: bool
-    is_wilt: bool
+    current_growth: float = 0.0

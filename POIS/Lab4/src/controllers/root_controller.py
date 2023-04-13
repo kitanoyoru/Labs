@@ -7,17 +7,20 @@ class RootController:
     def __init__(self, api: HttpFirstLabAPI) -> None:
         self._api = api
 
-        self._place_index: Optional[Place] = None
+        self._place_index: Optional[Place] = None 
 
     def link_view(self, view) -> None:
         self._view = view
 
     def get_table_info(self) -> List[Tuple[Any, ...]]:
+        if self._place_index is None:
+            self.__get_latest()
+
         res = []
 
-        res.extend([(fruit.name, fruit.current_growth) for fruit in self._place_index.fruits])
-        res.extend([(seed.name, seed.current_growth) for seed in self._place_index.seeds])
-        res.extend([(tree.name, tree.current_growth) for tree in self._place_index.trees])
+        res.extend([("fruit", fruit.name, fruit.current_growth) for fruit in self._place_index.fruits])
+        res.extend([("seed", seed.name, seed.current_growth) for seed in self._place_index.seeds])
+        res.extend([("tree", tree.name, tree.current_growth) for tree in self._place_index.trees])
 
         return res
 
@@ -41,6 +44,10 @@ class RootController:
         self._view.update()
 
     def _on_get_latest(self):
-        data = self._api.get_info()
-        self._place_index = Place(**data)
+        self.__get_latest()
         self._view.update()
+
+    def __get_latest(self):
+        data = self._api.get_info()
+        print(data)
+        self._place_index = Place(**data)
