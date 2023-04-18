@@ -1,5 +1,7 @@
 defmodule Lab6 do
-  def hello do
-    :world
+  use Application
+
+  def start(_type, _args) do
+    KVStore.Supervisor.start_link(name: KVStore.Supervisor)
   end
 end
