@@ -18,6 +18,8 @@ defmodule Lab6.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:typed_struct, "~> 0.3.0"}
+    ]
   end
 end
