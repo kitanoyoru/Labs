@@ -19,7 +19,8 @@ defmodule Lab6.MixProject do
 
   defp deps do
     [
-      {:typed_struct, "~> 0.3.0"}
+      {:typed_struct, "~> 0.3.0"},
+      {:poison, "~> 5.0"}
     ]
   end
 end
