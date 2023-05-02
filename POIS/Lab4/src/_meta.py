@@ -1,1 +1,1 @@
-__PROJECT_NAME__ = "Kita"
+__PROJECT_NAME__ = "durachek"

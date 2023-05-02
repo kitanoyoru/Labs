@@ -8,7 +8,7 @@ from app import App
 
 PROJECT_NAME = "lab1"
 HOST = "localhost"
-PORT = 8080
+PORT = 4050
 
 
 def main() -> None:

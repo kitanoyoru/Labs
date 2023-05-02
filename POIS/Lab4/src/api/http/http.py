@@ -7,7 +7,7 @@ from requests.adapters import HTTPAdapter, Retry
 
 
 class HttpFirstLabAPI:
-    def __init__(self, host = "http://localhost:8080") -> None:
+    def __init__(self, host = "http://localhost:4050") -> None:
         self._control_url = host + "/control"
         self._session = self.__init_session()
 
