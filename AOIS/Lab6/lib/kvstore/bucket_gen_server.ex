@@ -7,16 +7,12 @@ defmodule KVStore.BucketGenServer do
     GenServer.start_link(__MODULE__, :ok, options)
   end
 
-  def load_json(bucket) do
-    GenServer.cast(bucket, {:load_json})
-  end
-
   def get(bucket, key) do
     GenServer.call(bucket, {:get, key})
   end
 
   def list(bucket) do
-    GenServer.call(bucket, {:list})
+    GenServer.call(bucket, :list)
   end
 
   def put(bucket, key, value) do
@@ -34,67 +30,70 @@ defmodule KVStore.BucketGenServer do
   # Server callbacks
 
   def init(:ok) do
-    {:ok, %{size: 0, capacity: 5 items: {}}
+    {:ok, %{len: 0, cap: 5, items: %{}}}
   end
 
-  def handle_call({:list}, _from, %{items: items} = state) do
+  def handle_call(:list, _from, %{items: items} = state) do
     {:reply, items, state}
   end
 
-  def handle_call({:get, key}, _from, %{items: items} = state) do
-    hashed_key = hash_key(key)
+  def handle_call({:get, key}, _from, %{items: items, cap: cap} = state) do
+    hashed_key = hash_key(key, cap)
     entry = Map.get(items, hashed_key) |> Enum.find(fn x -> x.key == key end)
     {:reply, entry, state}
   end
 
-  def handle_call({:delete, key}, _from, %{size: size, items: items} = items) do
-    hashed_key = hash_key(key)
+  def handle_call({:delete, key}, _from, %{items: items, cap: cap} = state) do
+    hashed_key = hash_key(key, cap)
 
-    new_state = Map.update!(state, hashed_key, fn items ->
-      Enum.filter(items, fn item -> item.key != key end)
+    new_items = Map.update!(items, hashed_key, fn elements ->
+      Enum.filter(elements, fn el -> el.key != key end)
     end)
 
-    IO.inspect new_state
-
-
-    {:reply, :ok, new_state}
+    {:reply, :ok, %{state | items: new_items}}
   end
 
-  def handle_cast({:load_json}, state) do
-    filename = Application.fetch_env!(:my_app, :data_path)
-    #filename = "/Users/kitanoyoru/Labs/AOIS/Lab6/data/data.json"
-    {:ok, data} = read_data_json(filename)
+  def handle_cast({:put, key, value}, %{items: items, cap: cap, len: len} = state) do
+    hashed_key = hash_key(key, cap)
+    item = KVStore.StoredItem.new(key, value)
 
-    Enum.each(data, fn {key, value} ->
-      hashed_key = hash_key(key)
+    new_state =
+      case Map.fetch(items, hashed_key) do
+        :error -> %{state | items: Map.put(items, hashed_key, [item])}
+        {:ok, entry} -> %{state | items: Map.put(items, hashed_key, [item | entry])}
+      end
+
+    IO.inspect(new_state)
+
+    new_state =
+      if len == cap do
+        rehash_keys(new_state)
+      else
+        new_state
+      end
+
+    {:noreply, new_state}
+  end
+
+  defp hash_key(key, cap) do
+    key
+    |> String.to_charlist
+    |> Enum.reduce(0, fn code, acc ->
+        acc + code
+      end)
+    |> rem(cap)
+  end
+
+  defp rehash_keys(%{items: items, cap: cap, len: len}) do
+    Enum.reduce(items, %{items: %{}, cap: cap + 15, len: len}, fn {key, value}, %{items: items, cap: cap} = acc ->
+      hashed_key = hash_key(key, cap)
       item = KVStore.StoredItem.new(key, value)
 
-      case Map.fetch(state, hashed_key) do
-        :error -> state = Map.put(state, hashed_key, [item])
-        {:ok, entry} -> state = Map.put(state, hashed_key, [item | entry])
+      case Map.fetch(items, hashed_key) do
+        :error -> %{acc | items: Map.put(items, hashed_key, [item])}
+        {:ok, entry} -> %{acc | items: Map.put(items, hashed_key, [item | entry])}
       end
     end)
 
-    {:noreply, state}
-  end
-
-  def handle_cast({:put, key, value}, state) do
-    hashed_key = hash_key(key)
-    item = KVStore.StoredItem.new(key, value)
-
-    case Map.fetch(state, hashed_key) do
-      :error -> {:noreply, Map.put(state, hashed_key, [item])}
-      {:ok, entry} -> {:noreply, Map.put(state, hashed_key, [item | entry])}
-    end
-  end
-
-  defp hash_key(key) do
-    #:crypto.hash(:md5, key) |> Base.encode16()
-    String.length(key)
-  end
-
-  defp read_data_json(filename) do
-    with {:ok, body} <- File.read(filename),
-         {:ok, json} <- Poison.decode(body), do: {:ok, json}
   end
 end
