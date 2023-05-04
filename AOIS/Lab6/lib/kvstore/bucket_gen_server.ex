@@ -46,9 +46,10 @@ defmodule KVStore.BucketGenServer do
   def handle_call({:delete, key}, _from, %{items: items, cap: cap} = state) do
     hashed_key = hash_key(key, cap)
 
-    new_items = Map.update!(items, hashed_key, fn elements ->
-      Enum.filter(elements, fn el -> el.key != key end)
-    end)
+    new_items =
+      Map.update!(items, hashed_key, fn elements ->
+        Enum.filter(elements, fn el -> el.key != key end)
+      end)
 
     {:reply, :ok, %{state | items: new_items}}
   end
@@ -77,15 +78,16 @@ defmodule KVStore.BucketGenServer do
 
   defp hash_key(key, cap) do
     key
-    |> String.to_charlist
+    |> String.to_charlist()
     |> Enum.reduce(0, fn code, acc ->
-        acc + code
-      end)
+      acc + code
+    end)
     |> rem(cap)
   end
 
   defp rehash_keys(%{items: items, cap: cap, len: len}) do
-    Enum.reduce(items, %{items: %{}, cap: cap + 15, len: len}, fn {key, value}, %{items: items, cap: cap} = acc ->
+    Enum.reduce(items, %{items: %{}, cap: cap + 15, len: len}, fn {key, value},
+                                                                  %{items: items, cap: cap} = acc ->
       hashed_key = hash_key(key, cap)
       item = KVStore.StoredItem.new(key, value)
 
@@ -94,6 +96,5 @@ defmodule KVStore.BucketGenServer do
         {:ok, entry} -> %{acc | items: Map.put(items, hashed_key, [item | entry])}
       end
     end)
-
   end
 end
