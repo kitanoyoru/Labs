@@ -60,8 +60,8 @@ defmodule KVStore.BucketGenServer do
 
     new_state =
       case Map.fetch(items, hashed_key) do
-        :error -> %{state | items: Map.put(items, hashed_key, [item])}
-        {:ok, entry} -> %{state | items: Map.put(items, hashed_key, [item | entry])}
+        :error -> %{state | len: len + 1, items: Map.put(items, hashed_key, [item])}
+        {:ok, entry} -> %{state | len: len + 1, items: Map.put(items, hashed_key, [item | entry])}
       end
 
     IO.inspect(new_state)
@@ -86,15 +86,21 @@ defmodule KVStore.BucketGenServer do
   end
 
   defp rehash_keys(%{items: items, cap: cap, len: len}) do
-    Enum.reduce(items, %{items: %{}, cap: cap + 15, len: len}, fn {key, value},
-                                                                  %{items: items, cap: cap} = acc ->
-      hashed_key = hash_key(key, cap)
-      item = KVStore.StoredItem.new(key, value)
+    new_state = %{items: %{}, cap: cap + 15, len: len}
 
-      case Map.fetch(items, hashed_key) do
-        :error -> %{acc | items: Map.put(items, hashed_key, [item])}
-        {:ok, entry} -> %{acc | items: Map.put(items, hashed_key, [item | entry])}
-      end
+    IO.inspect Map.values(items)
+
+    Enum.each(Map.values(items), fn elements->
+      Enum.each(elements, fn el ->
+        hashed_key = hash_key(el.key, new_state.cap)
+
+        case Map.fetch(new_state.items, hashed_key) do
+          :error -> %{new_state | items: Map.put(new_state.items, hashed_key, [el])}
+          {:ok, entry} -> %{new_state| items: Map.put(new_state.items, hashed_key, [el | entry])}
+        end
+      end)
     end)
+
+    new_state
   end
 end
