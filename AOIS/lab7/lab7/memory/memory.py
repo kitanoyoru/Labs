@@ -1,9 +1,12 @@
+import re
+
 from abc import ABC, abstractmethod
 
 from functools import total_ordering, reduce
-from typing import List, Optional
 
-from utils import convert_to_bytes
+from typing import List, Optional, Type
+
+from lab7.utils import convert_to_bytes, MAX_BYTES
 
 
 class IMemory(ABC):
@@ -12,11 +15,11 @@ class IMemory(ABC):
         pass
 
     @abstractmethod
-    def sort(self, reverse: Optional[bool]) -> None:
+    def search_by_template(self, reverse: Optional[bool]) -> None:
         pass
 
     @abstractmethod
-    def in_range(self, lower: int, upper: int) -> List[Word]:
+    def check_by_bool_func(self, bool_fund: str) -> List["Word"]:
         pass
 
 @total_ordering
@@ -25,7 +28,7 @@ class Word:
         self._bytes = convert_to_bytes(value)
 
     def __repr__(self) -> str:
-        return self._bytes
+        return str(self._bytes)
 
     def __eq__(self, value: "Word") -> bool:
         return self._bytes == value._bytes
@@ -44,15 +47,33 @@ class Memory:
         w = Word(value)
         self._words.append(w)
 
-    def sort(self, reverse: Optional[bool]) -> None:
-        self._words.sort(reverse=reverse)
+    def search_by_template(self, template: int, limit: int = 5) -> List[Word]:
+        def count_equals_bytes(word: Word) -> int:
+            counter = 0
+            for i in range(MAX_BYTES):
+                if word._bytes[i] == template_word._bytes[i]:
+                    counter += 1
 
-    def in_range(self, lower: int, upper: int) -> List[Word]:
-        def closure(word: Word, acc: List[Word]):
-            acc.append(word if word > lower_word and word < upper_word else None) 
+            return counter
+
+
+        template_word = Word(template)
+        return sorted(self._words, key=lambda word: count_equals_bytes(word))[:limit]
+
+    def check_by_bool_func(self, bool_func: str) -> List[Word]:
+        formatted_bool_func = re.sub(r"[a-zA-Z]", "{}", bool_func)
+
+
+        def check_word(acc: List[Word], word: Word) -> List[Word]:
+            result = eval(formatted_bool_func.format(*word._bytes))
+
+            if result:
+              acc.append(word)  
+
             return acc
 
-        lower_word, upper_word = map(Word, (lower, upper))
+            
 
-        return list(filter(reduce(closure, self._words, [])))
+        return list(reduce(check_word, self._words, []))
+                
         
