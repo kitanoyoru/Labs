@@ -63,7 +63,6 @@ class Memory:
     def check_by_bool_func(self, bool_func: str) -> List[Word]:
         formatted_bool_func = re.sub(r"[a-zA-Z]", "{}", bool_func)
 
-
         def check_word(acc: List[Word], word: Word) -> List[Word]:
             result = eval(formatted_bool_func.format(*word._bytes))
 
@@ -71,8 +70,6 @@ class Memory:
               acc.append(word)  
 
             return acc
-
-            
 
         return list(reduce(check_word, self._words, []))
                 

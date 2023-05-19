@@ -21,25 +21,28 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		checker := app.NewDnfChecker(formula)
 		lexerErrors, parserErrors := checker.Result()
-
-		if len(lexerErrors) > 0 {
-			fmt.Printf("Lexer %d errors found\n", len(lexerErrors))
-			for _, e := range lexerErrors {
-				fmt.Println("\t", e.Error())
-			}
-		}
-
-		if len(parserErrors) > 0 {
-			fmt.Printf("Parser %d errors found\n", len(parserErrors))
-			for _, e := range parserErrors {
-				fmt.Println("\t", e.Error())
-			}
-		}
-
-		if len(lexerErrors) == 0 && len(parserErrors) == 0 {
-			fmt.Println("Formula is DNF")
-		}
+		checkIsDnf(lexerErrors, parserErrors)
 	},
+}
+
+func checkIsDnf(lexerErrors, parserErrors []*app.CustomSyntaxError) {
+	if len(lexerErrors) > 0 {
+		fmt.Printf("Lexer %d errors found\n", len(lexerErrors))
+		for _, e := range lexerErrors {
+			fmt.Println("\t", e.Error())
+		}
+	}
+
+	if len(parserErrors) > 0 {
+		fmt.Printf("Parser %d errors found\n", len(parserErrors))
+		for _, e := range parserErrors {
+			fmt.Println("\t", e.Error())
+		}
+	}
+
+	if len(lexerErrors) == 0 && len(parserErrors) == 0 {
+		fmt.Println("Formula is DNF")
+	}
 }
 
 func Execute() {
