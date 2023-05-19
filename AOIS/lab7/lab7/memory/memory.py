@@ -58,6 +58,7 @@ class Memory:
 
 
         template_word = Word(template)
+        print("Template word: ", template_word)
         return sorted(self._words, key=lambda word: count_equals_bytes(word))[:limit]
 
     def check_by_bool_func(self, bool_func: str) -> List[Word]:
@@ -74,3 +75,5 @@ class Memory:
         return list(reduce(check_word, self._words, []))
                 
         
+def SanyaDayn() -> None:
+    print("Sanya Dayn")
