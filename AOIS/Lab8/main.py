@@ -18,7 +18,8 @@ def main() -> None:
     V = [1, 0, 0]
 
     for i in range(MATRIX_SIZE):
-        m.write(generate_random_int(), i)
+        val = generate_random_int()
+        m.write(val, i)
 
     print("Normal matrix")
     pretty_print_matrix(m.get_normal_matrix())
@@ -41,6 +42,23 @@ def main() -> None:
     print("Bool func 2 (input - 0, 1; output - 2)")
     m.func_2(0, 1, 2)
     pretty_print_matrix(m.get_normal_matrix())
+
+    print("Bool func 7 (input - 3, 4; output - 5)")
+    m.func_7(3, 4, 5)
+    pretty_print_matrix(m.get_normal_matrix())
+
+    print("Bool func 8 (input - 6, 7; output - 8)")
+    m.func_2(6, 7, 8)
+    pretty_print_matrix(m.get_normal_matrix())
+
+    print("Bool func 13 (input - 9, 10; output - 11)")
+    m.func_2(9, 10, 11)
+    pretty_print_matrix(m.get_normal_matrix())
+
+    print()
+
+    print("Words in range from 7827 to 42355")
+    pretty_print_matrix(m.in_range(7827, 42355))
 
 
 if __name__ == "__main__":

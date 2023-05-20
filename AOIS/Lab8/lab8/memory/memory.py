@@ -129,17 +129,17 @@ class Memory:
 
 
     def in_range(self, lower: int, upper: int) -> List[Word]:
-        lower_word, upper_word = map(Word.__init__, (lower, upper))
+        lower_word, upper_word = map(Word, (lower, upper))
         def check_in_range(acc: List[Word], word: Word) -> List[Word]:
             if lower_word < word and upper_word > word:
                 acc.append(word) 
 
             return acc
 
-        return reduce(check_in_range, (self.read_word(i) for i in range(MATRIX_SIZE)), [])
+        return reduce(check_in_range, (self.read(i) for i in range(MATRIX_SIZE)), [])
 
     def __str__(self) -> str:
-        return str([self.read_word(addr) for addr in range(MATRIX_SIZE)])
+        return str([self._read_word(addr) for addr in range(MATRIX_SIZE)])
 
         
 
