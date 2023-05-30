@@ -1,4 +1,3 @@
-import math
 import random
 
 from lab8 import Memory, MATRIX_SIZE 
@@ -26,12 +25,15 @@ def main() -> None:
 
     print("Diagonal matrix")
     m.to_diagonal_matrix()
-    pretty_print_matrix(m.get_normal_matrix())
+    pretty_print_matrix(m._memory)
 
     print("5th word in matrix")
     print(m.read(5))
 
     print()
+
+    print("Matrix before sum")
+    pretty_print_matrix(m.get_normal_matrix())
 
     print("Sum with V (matrix after sum operation)")
     m.sum(V)

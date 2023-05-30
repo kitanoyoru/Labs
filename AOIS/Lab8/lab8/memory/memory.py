@@ -64,11 +64,12 @@ class Memory:
         return self._write_word(word, address)
 
     def _write_word(self, word: Word, address: int) -> None:
+        for i in range(address, MATRIX_SIZE):
+            self._memory[i][address] = word[i-address] 
+
         for i in range(address):
             self._memory[i][address] = word[MATRIX_SIZE-address+i]
 
-        for i in range(address, MATRIX_SIZE):
-            self._memory[i][address] = word[i-address] 
 
     def read(self, address: int) -> Word:
         return self._read_word(address)
