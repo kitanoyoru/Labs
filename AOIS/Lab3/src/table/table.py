@@ -10,7 +10,6 @@ import src.table.constants as constants
 class BoolVar:
     value: int
 
-
     def __hash__(self) -> int:
         return hash(self.value)
 
@@ -24,7 +23,7 @@ class BoolVar:
 
         return is_equals
 
-            
+
 # REFACTOR: maybe rafactor it using __slots__
 @dataclass
 class Row:
@@ -40,7 +39,7 @@ class Row:
             val = getattr(self, __key)
         elif isinstance(__key, int):
             val = getattr(self, chr(97 + __key))
-        
+
         return val
 
     def __setitem__(self, __key: str, __value: BoolVar) -> None:

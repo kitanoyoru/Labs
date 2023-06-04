@@ -10,79 +10,117 @@ class Area:
             self.table = {}
         else:
             self.table = table
-        
+
         if areas is None:
             self.areas = []
         else:
             self.areas = areas
 
-
     def check_four_area_line(self, value) -> "Area":
         for const in constants.VALUES_A:
-            is_line = True
-            for j in range(len(constants.VALUES_B_C)):
-                if self.table[const][constants.VALUES_B_C[j]] != value:
-                    is_line = False
-                    break
-            area = [[const, *constants.VALUES_B_C[0]], [const, *constants.VALUES_B_C[1]],
-                    [const, *constants.VALUES_B_C[2]], [const, *constants.VALUES_B_C[3]]]
-
-            if is_line:
+            line = [self.table[const][bc] for bc in constants.VALUES_B_C]
+            if all(v == value for v in line):
+                area = [[const, *constants.VALUES_B_C[j]] for j in range(4)]
                 self._add_area(area)
 
-        return self # For chaining
+        return self  # For chaining
 
     def check_square_area(self, value) -> "Area":
-        def _first_checker(i,  value) -> bool:
-            if self.table[0][constants.VALUES_B_C[i + 1]] == self.table[0][constants.VALUES_B_C[i]] == value\
-                and self.table[1][constants.VALUES_B_C[i + 1]] == self.table[1][constants.VALUES_B_C[i]] == value:
+        def _first_checker(i, value) -> bool:
+            cell1, cell2 = constants.VALUES_B_C[i], constants.VALUES_B_C[i + 1]
+            if (
+                self.table[0][cell1] == self.table[0][cell2] == value
+                and self.table[1][cell1] == self.table[1][cell2] == value
+            ):
                 return True
-            return False
-        
+            else:
+                return False
+
         def _second_checker(value) -> bool:
-            if self.table[0][constants.VALUES_B_C[0]] == self.table[0][constants.VALUES_B_C[-1]] == value \
-                    and self.table[1][constants.VALUES_B_C[0]] == self.table[1][constants.VALUES_B_C[-1]] == value:
-                    return True
-            return False
+            if (
+                self.table[0][constants.VALUES_B_C[0]]
+                == self.table[0][constants.VALUES_B_C[-1]]
+                == value
+                and self.table[1][constants.VALUES_B_C[0]]
+                == self.table[1][constants.VALUES_B_C[-1]]
+                == value
+            ):
+                return True
+            else:
+                return False
 
-        for i in range(len(constants.VALUES_B_C)):
-            if i + 1 < len(constants.VALUES_B_C):
-                if _first_checker(i, value):
-                    area = [[0, *constants.VALUES_B_C[i+1]], [0, *constants.VALUES_B_C[i]], [1, *constants.VALUES_B_C[i+1]], [1, *constants.VALUES_B_C[i]]]
-                    self._add_area(area)
+        areas = [
+            [
+                [0, *constants.VALUES_B_C[i + 1]],
+                [0, *constants.VALUES_B_C[i]],
+                [1, *constants.VALUES_B_C[i + 1]],
+                [1, *constants.VALUES_B_C[i]],
+            ]
+            for i in range(len(constants.VALUES_B_C) - 1)
+            if _first_checker(i, value)
+        ]
 
-            
         if _second_checker(value):
-            area = [[0, *constants.VALUES_B_C[0]], [0, *constants.VALUES_B_C[-1]], [1, *constants.VALUES_B_C[0]], [1, *constants.VALUES_B_C[-1]]]
+            areas.append(
+                [
+                    [0, *constants.VALUES_B_C[0]],
+                    [0, *constants.VALUES_B_C[-1]],
+                    [1, *constants.VALUES_B_C[0]],
+                    [1, *constants.VALUES_B_C[-1]],
+                ]
+            )
+
+        for area in areas:
             self._add_area(area)
 
         return self
 
     def check_one_area(self, value) -> "Area":
-        for const in constants.VALUES_A:
-            for i in range(len(constants.VALUES_B_C)):
-                if self.table[const][constants.VALUES_B_C[i]] == value:
-                    area = [[const, *constants.VALUES_B_C[i]]]
-                    self._add_area(area)
+        areas = [
+            [[const, *constants.VALUES_B_C[i]]]
+            for const in constants.VALUES_A
+            for i in range(len(constants.VALUES_B_C))
+            if self.table[const][constants.VALUES_B_C[i]] == value
+        ]
+
+        for area in areas:
+            self._add_area(area)
 
         return self
 
     def check_two_area_line(self, value) -> "Area":
-        for const in constants.VALUES_A:
-            for i in range(len(constants.VALUES_B_C)):
-                if self.table[const][constants.VALUES_B_C[0]] == self.table[const][constants.VALUES_B_C[-1]] == value:
-                    area = [[const, *constants.VALUES_B_C[0]], [const, *constants.VALUES_B_C[-1]]]
-                    self._add_area(area)
+        areas = (
+            [
+                [[const, *constants.VALUES_B_C[0]], [const, *constants.VALUES_B_C[-1]]]
+                for const in constants.VALUES_A
+                if all(self.table[const][col] == value for col in constants.VALUES_B_C)
+            ]
+            + [
+                [
+                    [const, *constants.VALUES_B_C[i + 1]],
+                    [const, *constants.VALUES_B_C[i]],
+                ]
+                for const in constants.VALUES_A
+                for i in range(len(constants.VALUES_B_C) - 1)
+                if self.table[const][constants.VALUES_B_C[i + 1]]
+                == self.table[const][constants.VALUES_B_C[i]]
+                == value
+            ]
+            + [
+                [
+                    [const + 1, *constants.VALUES_B_C[i]],
+                    [const, *constants.VALUES_B_C[i]],
+                ]
+                for const in constants.VALUES_A[:-1]
+                for i in range(len(constants.VALUES_B_C))
+                if self.table[const + 1][constants.VALUES_B_C[i]]
+                == self.table[const][constants.VALUES_B_C[i]]
+                == value
+            ]
+        )
 
-                if i + 1 < len(constants.VALUES_B_C):
-                    if self.table[const][constants.VALUES_B_C[i + 1]] == self.table[const][constants.VALUES_B_C[i]] == value:
-                        area = [[const, *constants.VALUES_B_C[i + 1]], [const, *constants.VALUES_B_C[i]]]
-                        self._add_area(area)
-
-                if const + 1 < 2:
-                    if self.table[const+ 1][constants.VALUES_B_C[i]] == self.table[const][constants.VALUES_B_C[i]] == value:
-                        area = [[const + 1, *constants.VALUES_B_C[i]], [const, *constants.VALUES_B_C[i]]]
-                        self._add_area(area)
+        for area in areas:
+            self._add_area(area)
 
         return self
 
@@ -106,8 +144,6 @@ class Area:
                     break
 
         return is_in_count != len(original_area)
-    
-
 
     def _add_area(self, value):
         if self.__is_in_area(value):
